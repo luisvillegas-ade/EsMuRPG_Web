@@ -1,73 +1,137 @@
 <!doctype html>
 <html lang="es" class="h-full">
- <head>
+
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Taller de Chacarera</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap');
-    * { font-family: 'Fredoka', sans-serif; }
-    body { background-color: #1a120b; color: #fcd34d; margin: 0; overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; }
-    .staff-line { background: #78350f; height: 3px; }
-    .beat-indicator { transition: left 0.1s linear; }
-    .hit-animation { animation: boom 0.2s ease-out; }
-    @keyframes boom { 0% { transform: scale(1); } 50% { transform: scale(1.3); filter: brightness(1.5); } 100% { transform: scale(1); } }
+
+    * {
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    body {
+      background-color: #1a120b;
+      color: #fcd34d;
+      margin: 0;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .staff-line {
+      background: #78350f;
+      height: 3px;
+    }
+
+    .beat-indicator {
+      transition: left 0.1s linear;
+    }
+
+    .hit-animation {
+      animation: boom 0.2s ease-out;
+    }
+
+    @keyframes boom {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.3);
+        filter: brightness(1.5);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
   </style>
-  <style>body { box-sizing: border-box; }</style>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+  </style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
- </head>
- <body>
-  <div id="app-container" class="w-full max-w-2xl bg-orange-950/90 rounded-3xl border-4 border-orange-600 shadow-2xl p-6 relative"><!-- Botón Salir --> <button id="btn-cancelar" style="position: absolute; top: -15px; right: -15px; background: #dc2626; color: white; border: 2px solid white; border-radius: 50%; width: 35px; height: 35px; font-weight: bold; cursor: pointer; z-index: 100;">X</button> <!-- Marcadores -->
-   <div class="flex justify-between items-center mb-6">
-    <div class="flex gap-3">
-     <div class="bg-black/40 px-3 py-1 rounded-xl border border-orange-500 text-center"><span class="text-orange-400 text-xs uppercase block">Aciertos</span> <span id="score" class="text-xl font-bold">0</span>
-     </div>
-     <div class="bg-black/40 px-3 py-1 rounded-xl border border-orange-500 text-center"><span class="text-orange-400 text-xs uppercase block">Compases</span> <span id="measure-count" class="text-xl font-bold">0</span>/8
-     </div>
-    </div><button id="start-btn" class="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-xl shadow-[0_4px_0_#14532d] active:shadow-none active:translate-y-1 transition-all"> ▶️ TOCAR </button>
-   </div><!-- Pentagrama 3/4 -->
-   <div class="relative bg-orange-100/5 rounded-2xl p-6 border-2 border-orange-500/30 mb-4">
-    <div class="flex items-center">
-     <div class="flex flex-col items-center justify-center mr-6 font-black text-3xl text-orange-400 leading-none"><span>3</span><span class="border-t-2 border-orange-400 w-full my-1"></span><span>4</span>
-     </div>
-     <div class="flex-1 relative h-24 flex items-center">
-      <div class="absolute w-full top-0 staff-line"></div>
-      <div class="absolute w-full top-8 staff-line"></div>
-      <div class="absolute w-full top-16 staff-line"></div>
-      <div class="absolute w-full top-24 staff-line"></div>
-      <div id="notes-container" class="absolute inset-0 flex justify-around items-center w-full">
-       <div class="flex flex-col items-center opacity-40" id="slot-0">
-        <div class="text-5xl">
-         𝄽
-        </div><span class="text-[10px] font-bold">ESPERA</span>
-       </div>
-       <div class="flex flex-col items-center" id="slot-1">
-        <div class="w-1 h-12 bg-orange-400 mb-[-5px] ml-3"></div>
-        <div class="w-6 h-4 bg-orange-400 rounded-full -rotate-12 head"></div><span class="text-[10px] font-bold">BOMBO</span>
-       </div>
-       <div class="flex flex-col items-center" id="slot-2">
-        <div class="w-1 h-12 bg-orange-400 mb-[-5px] ml-3"></div>
-        <div class="w-6 h-4 bg-orange-400 rounded-full -rotate-12 head"></div><span class="text-[10px] font-bold">BOMBO</span>
-       </div>
+</head>
+
+<body>
+  <div id="app-container"
+    class="w-full max-w-2xl bg-orange-950/90 rounded-3xl border-4 border-orange-600 shadow-2xl p-6 relative">
+    <!-- Botón Salir --> <button id="btn-cancelar"
+      style="position: absolute; top: -15px; right: -15px; background: #dc2626; color: white; border: 2px solid white; border-radius: 50%; width: 35px; height: 35px; font-weight: bold; cursor: pointer; z-index: 100;">X</button>
+    <!-- Marcadores -->
+    <div class="flex justify-between items-center mb-6">
+      <div class="flex gap-3">
+        <div class="bg-black/40 px-3 py-1 rounded-xl border border-orange-500 text-center"><span
+            class="text-orange-400 text-xs uppercase block">Aciertos</span> <span id="score"
+            class="text-xl font-bold">0</span>
+        </div>
+        <div class="bg-black/40 px-3 py-1 rounded-xl border border-orange-500 text-center"><span
+            class="text-orange-400 text-xs uppercase block">Compases</span> <span id="measure-count"
+            class="text-xl font-bold">0</span>/8
+        </div>
+      </div><button id="start-btn"
+        class="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-xl shadow-[0_4px_0_#14532d] active:shadow-none active:translate-y-1 transition-all">
+        ▶️ TOCAR </button>
+    </div><!-- Pentagrama 3/4 -->
+    <div class="relative bg-orange-100/5 rounded-2xl p-6 border-2 border-orange-500/30 mb-4">
+      <div class="flex items-center">
+        <div class="flex flex-col items-center justify-center mr-6 font-black text-3xl text-orange-400 leading-none">
+          <span>3</span><span class="border-t-2 border-orange-400 w-full my-1"></span><span>4</span>
+        </div>
+        <div class="flex-1 relative h-24 flex items-center">
+          <div class="absolute w-full top-0 staff-line"></div>
+          <div class="absolute w-full top-8 staff-line"></div>
+          <div class="absolute w-full top-16 staff-line"></div>
+          <div class="absolute w-full top-24 staff-line"></div>
+          <div id="notes-container" class="absolute inset-0 flex justify-around items-center w-full">
+            <div class="flex flex-col items-center opacity-40" id="slot-0">
+              <div class="text-5xl">
+                𝄽
+              </div><span class="text-[10px] font-bold">ESPERA</span>
+            </div>
+            <div class="flex flex-col items-center" id="slot-1">
+              <div class="w-1 h-12 bg-orange-400 mb-[-5px] ml-3"></div>
+              <div class="w-6 h-4 bg-orange-400 rounded-full -rotate-12 head"></div><span
+                class="text-[10px] font-bold">BOMBO</span>
+            </div>
+            <div class="flex flex-col items-center" id="slot-2">
+              <div class="w-1 h-12 bg-orange-400 mb-[-5px] ml-3"></div>
+              <div class="w-6 h-4 bg-orange-400 rounded-full -rotate-12 head"></div><span
+                class="text-[10px] font-bold">BOMBO</span>
+            </div>
+          </div>
+          <div id="beat-indicator"
+            class="absolute top-0 w-1.5 h-full bg-yellow-400 shadow-[0_0_15px_yellow] opacity-0 rounded-full"></div>
+        </div>
       </div>
-      <div id="beat-indicator" class="absolute top-0 w-1.5 h-full bg-yellow-400 shadow-[0_0_15px_yellow] opacity-0 rounded-full"></div>
-     </div>
     </div>
-   </div>
-   <div id="feedback" class="text-center h-6 text-lg font-bold text-yellow-500">
-    ¡CHACARERA! (1-2-3)
-   </div><!-- Botón táctil para celular --> <button id="touch-btn" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #f59e0b, #f97316); color: white; font-weight: bold; padding: 15px 30px; border-radius: 50px; border: none; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; touch-action: manipulation;"> 🥁 TOCAR </button> <!-- Modal Victoria (CENTRADOR FIJO) -->
-   <div id="victory-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center;">
-    <div style="background: linear-gradient(to bottom, #f59e0b, #9a3412); border: 4px solid #fcd34d; border-radius: 20px; padding: 30px; text-align: center; width: 260px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-     <div style="font-size: 50px; margin-bottom: 10px;">
-      🥁
-     </div>
-     <h2 style="font-size: 22px; font-weight: bold; color: white; margin-bottom: 10px;">¡MUY BIEN!</h2>
-     <p style="color: #fef3c7; margin-bottom: 20px; font-size: 14px;">Has dominado la base de la Chacarera.</p><button id="continue-btn" style="background: #16a34a; color: white; font-weight: bold; padding: 12px 0; width: 100%; border-radius: 10px; border: none; cursor: pointer; font-size: 16px;">FINALIZAR ➡️</button>
+    <div id="feedback" class="text-center h-6 text-lg font-bold text-yellow-500">
+      ¡CHACARERA! (1-2-3)
+    </div><!-- Botón táctil para celular --> <button id="touch-btn"
+      style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #f59e0b, #f97316); color: white; font-weight: bold; padding: 15px 30px; border-radius: 50px; border: none; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; touch-action: manipulation;">
+      🥁 TOCAR </button> <!-- Modal Victoria (CENTRADOR FIJO) -->
+    <div id="victory-modal"
+      style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center;">
+      <div
+        style="background: linear-gradient(to bottom, #f59e0b, #9a3412); border: 4px solid #fcd34d; border-radius: 20px; padding: 30px; text-align: center; width: 260px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <div style="font-size: 50px; margin-bottom: 10px;">
+          🥁
+        </div>
+        <h2 style="font-size: 22px; font-weight: bold; color: white; margin-bottom: 10px;">¡MUY BIEN!</h2>
+        <p style="color: #fef3c7; margin-bottom: 20px; font-size: 14px;">Has dominado la base de la Chacarera.</p>
+        <button id="continue-btn"
+          style="background: #16a34a; color: white; font-weight: bold; padding: 12px 0; width: 100%; border-radius: 10px; border: none; cursor: pointer; font-size: 16px;">FINALIZAR
+          ➡️</button>
+      </div>
     </div>
-   </div>
   </div>
   <script>
     let isPlaying = false, score = 0, measureCount = 0, currentBeat = 0, tempo = 110;
@@ -81,10 +145,10 @@
       touchBtn.style.display = 'block';
     }
 
-    function initAudio() { 
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); 
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
-    
+
     // Sonido del metrónomo (click)
     function playMetronomeClick(isFirstBeat) {
       if (!audioCtx) return;
@@ -105,17 +169,17 @@
       if (!audioCtx) return;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      
+
       osc.type = 'sine';
       osc.frequency.setValueAtTime(150, audioCtx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.15);
-      
+
       gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-      
+
       osc.connect(gain);
       gain.connect(audioCtx.destination);
-      
+
       osc.start(audioCtx.currentTime);
       osc.stop(audioCtx.currentTime + 0.15);
     }
@@ -150,34 +214,26 @@
       if (!isPlaying) return;
       initAudio();
       playDrumSound();
-      
-      const beatDuration = 60000 / tempo;
+
       const diff = Math.abs(Date.now() - lastBeatTime);
-      // Tolerancia aumentada de 0.4 a 0.65 para compensar latencia en celular
-      const tolerance = beatDuration * 0.65;
+      const tolerance = (60000 / tempo) * 0.4;
 
       if (diff < tolerance) {
         if (currentBeat === 0) {
-           document.getElementById('feedback').textContent = "¡ESPERA! ✋";
+          document.getElementById('feedback').textContent = "¡ESPERA! ✋";
         } else if (!userHits[currentBeat]) {
-           userHits[currentBeat] = true;
-           score += 50;
-           document.getElementById('score').textContent = score;
-           document.getElementById('feedback').textContent = "¡BOMBO! 🥁";
-           const head = document.querySelector(`#slot-${currentBeat} .head`);
-           if (head) {
-             head.classList.add('hit-animation');
-             setTimeout(() => head.classList.remove('hit-animation'), 200);
-           }
+          userHits[currentBeat] = true;
+          score += 50;
+          document.getElementById('score').textContent = score;
+          document.getElementById('feedback').textContent = "¡BOMBO! 🥁";
+          const head = document.querySelector(`#slot-${currentBeat} .head`);
+          head.classList.add('hit-animation');
+          setTimeout(() => head.classList.remove('hit-animation'), 200);
         }
-      } else {
-        // Feedback cuando tocas fuera de tiempo
-        document.getElementById('feedback').textContent = "Fuera de tiempo ⏰";
       }
     }
 
     function evaluarCompas() {
-      // Ambos beats 1 y 2 deben ser tocados (beat 0 es espera)
       if (userHits[1] && userHits[2]) {
         measureCount++;
         document.getElementById('measure-count').textContent = measureCount;
@@ -192,10 +248,10 @@
     document.getElementById('start-btn').onclick = () => {
       initAudio();
       if (isPlaying) { location.reload(); }
-      else { 
-        isPlaying = true; 
+      else {
+        isPlaying = true;
         document.getElementById('start-btn').textContent = "REINICIAR";
-        runLoop(); 
+        runLoop();
       }
     };
 
@@ -215,16 +271,18 @@
     });
 
     document.getElementById('btn-cancelar').onclick = () => {
-       if(confirm("¿Salir de la clase?")) {
-          if (window.parent) window.parent.postMessage({ tipo: "CANCELAR_DESAFIO" }, "*");
-       }
+      if (confirm("¿Salir de la clase?")) {
+        if (window.parent) window.parent.postMessage({ tipo: "CANCELAR_DESAFIO" }, "*");
+      }
     };
 
     document.getElementById('continue-btn').onclick = () => {
       if (window.parent) {
-         window.parent.postMessage({ tipo: "FIN_DESAFIO", puntaje: score, id: "chacarera" }, "*");
+        window.parent.postMessage({ tipo: "FIN_DESAFIO", puntaje: score, id: "chacarera" }, "*");
       }
     };
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cdd70ddd7b2ee13',t:'MTc3MTA4MTI4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+  <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9cdd5e5be741ee13',t:'MTc3MTA4MDUyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
 </html>
