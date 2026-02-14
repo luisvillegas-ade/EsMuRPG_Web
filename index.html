@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estudio Villegas - Acceso RPG</title>
+    <title>Escuela de música Villegas - Acceso RPG</title>
     <style>
         body {
-            background-color: #0d1117; /* Negro Ciberdefensa */
+            background-color: #0d1117;
+            /* Negro Ciberdefensa */
             color: #c9d1d9;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -15,16 +17,23 @@
             height: 100vh;
             margin: 0;
         }
+
         .login-container {
             background: #161b22;
             padding: 2rem;
             border-radius: 8px;
             border: 1px solid #30363d;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
             text-align: center;
             width: 300px;
         }
-        h2 { color: #d4af37; margin-bottom: 1.5rem; } /* Dorado */
+
+        h2 {
+            color: #d4af37;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Dorado */
         input {
             width: 100%;
             padding: 10px;
@@ -35,10 +44,12 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
+
         button {
             width: 100%;
             padding: 10px;
-            background-color: #238636; /* Verde Éxito */
+            background-color: #238636;
+            /* Verde Éxito */
             color: white;
             border: none;
             border-radius: 4px;
@@ -46,21 +57,30 @@
             cursor: pointer;
             margin-top: 10px;
         }
-        button:hover { background-color: #2ea043; }
-        .footer { font-size: 0.8rem; color: #8b949e; margin-top: 20px; }
+
+        button:hover {
+            background-color: #2ea043;
+        }
+
+        .footer {
+            font-size: 0.8rem;
+            color: #8b949e;
+            margin-top: 20px;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="login-container">
         <h2>ESTUDIO VILLEGAS</h2>
         <p>Identifícate para ingresar</p>
-        
+
         <input type="email" id="email" placeholder="Correo electrónico">
         <input type="password" id="pass" placeholder="Contraseña">
-        
+
         <button id="btn-ingresar" onclick="iniciarSesion()">INGRESAR AL SISTEMA</button>
-        
+
         <p class="footer">Sistema seguro v1.0</p>
     </div>
 
@@ -87,4 +107,5 @@
     </script>
 
 </body>
+
 </html>
