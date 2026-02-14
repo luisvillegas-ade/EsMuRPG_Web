@@ -98,20 +98,45 @@
      <p style="color: #78350f; font-weight: 600; margin-bottom: 20px; font-size: 14px; font-family: 'Fredoka', sans-serif;">Lección completada con éxito.</p><button id="continue-btn" style="background: #16a34a; color: white; font-weight: bold; padding: 12px 0; width: 100%; border-radius: 12px; border: none; cursor: pointer; font-size: 16px; box-shadow: 0 4px 0 #15803d;"> CONTINUAR ➡️ </button>
     </div>
    </div>
-   <script>
-    // Configuración de Audio (Funciona mejor en navegadores modernos)
+  </div>
+  <script>
+    // Configuración de Audio
     let audioCtx = null;
     function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-    function playTone(freq, dur) {
+    
+    // Sonido del metrónomo
+    function playMetronomeClick(isFirstBeat) {
       if (!audioCtx) return;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(isFirstBeat ? 880 : 440, audioCtx.currentTime);
       gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(); osc.stop(audioCtx.currentTime + dur);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+      osc.connect(gain); 
+      gain.connect(audioCtx.destination);
+      osc.start(); 
+      osc.stop(audioCtx.currentTime + 0.05);
+    }
+
+    // Sonido del bombo del usuario
+    function playDrumSound() {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.15);
+      
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+      
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      osc.start(audioCtx.currentTime);
+      osc.stop(audioCtx.currentTime + 0.15);
     }
 
     // Estado del Juego
@@ -154,7 +179,7 @@
     function runLoop() {
       if (!isPlaying) return;
       lastBeatTime = Date.now();
-      playTone(currentBeat === 0 ? 880 : 440, 0.1);
+      playMetronomeClick(currentBeat === 0);
       
       // Update visual indicator
       const positions = [12, 37, 62, 87];
@@ -174,7 +199,7 @@
 
     function handleInput() {
       if (!isPlaying) return;
-      playTone(150, 0.1);
+      playDrumSound();
       
       const beatDuration = 60000 / tempo;
       const diff = Math.abs(Date.now() - lastBeatTime);
@@ -235,7 +260,6 @@
         measureDisplay.textContent = measureCount;
         if (measureCount >= 8) {
           isPlaying = false;
-          // CAMBIO AQUÍ: Forzamos el mostrado del modal
           victoryModal.style.display = 'flex'; 
         }
       }
@@ -245,9 +269,7 @@
 
     // --- COMUNICACIÓN CON EL RPG ---
     document.getElementById('continue-btn').addEventListener('click', () => {
-      // Ocultamos el cartel
       victoryModal.style.display = 'none';
-      // Avisamos al RPG
       if (window.parent) {
         window.parent.postMessage({ tipo: "FIN_DESAFIO", puntaje: score }, "*");
       }
@@ -284,7 +306,6 @@
             };
         }
     });
-  </script> <button id="btn-cancelar" style="position: fixed; top: 10px; right: 10px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">X</button>
-  </div>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cdd40f8362d1e7a',t:'MTc3MTA3OTMyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+  </script><button id="btn-cancelar" style="position: fixed; top: 10px; right: 10px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">X</button>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cdd521c67b09b12',t:'MTc3MTA4MDAyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
