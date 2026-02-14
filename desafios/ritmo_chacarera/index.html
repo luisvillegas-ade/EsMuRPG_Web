@@ -151,8 +151,10 @@
       initAudio();
       playDrumSound();
       
+      const beatDuration = 60000 / tempo;
       const diff = Math.abs(Date.now() - lastBeatTime);
-      const tolerance = (60000 / tempo) * 0.4;
+      // Tolerancia aumentada de 0.4 a 0.65 para compensar latencia en celular
+      const tolerance = beatDuration * 0.65;
 
       if (diff < tolerance) {
         if (currentBeat === 0) {
@@ -163,13 +165,19 @@
            document.getElementById('score').textContent = score;
            document.getElementById('feedback').textContent = "¡BOMBO! 🥁";
            const head = document.querySelector(`#slot-${currentBeat} .head`);
-           head.classList.add('hit-animation');
-           setTimeout(() => head.classList.remove('hit-animation'), 200);
+           if (head) {
+             head.classList.add('hit-animation');
+             setTimeout(() => head.classList.remove('hit-animation'), 200);
+           }
         }
+      } else {
+        // Feedback cuando tocas fuera de tiempo
+        document.getElementById('feedback').textContent = "Fuera de tiempo ⏰";
       }
     }
 
     function evaluarCompas() {
+      // Ambos beats 1 y 2 deben ser tocados (beat 0 es espera)
       if (userHits[1] && userHits[2]) {
         measureCount++;
         document.getElementById('measure-count').textContent = measureCount;
@@ -218,5 +226,5 @@
       }
     };
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cdd5e5be741ee13',t:'MTc3MTA4MDUyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cdd70ddd7b2ee13',t:'MTc3MTA4MTI4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

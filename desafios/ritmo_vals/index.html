@@ -187,7 +187,7 @@
     document.getElementById('continue-btn').addEventListener('click', () => {
       victoryModal.style.display = 'none';
       if (window.parent) {
-        window.parent.postMessage({ tipo: "FIN_DESAFIO", puntaje: score }, "*");
+        window.parent.postMessage({ tipo: "FIN_DESAFIO", puntaje: score, id: "vals" }, "*");
       }
     });
 

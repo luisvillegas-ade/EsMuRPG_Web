@@ -32,6 +32,10 @@ window.abrirDesafio = function(nombreCarpeta) {
             else if (event.data.id === "chacarera") {
                  $gameSwitches.setValue(2, true); // Interruptor 2: Chacarera
             }
+              // --- AGREGAR ESTO ---
+            else if (event.data.id === "vals") {
+                 $gameSwitches.setValue(3, true); // Vals (Interruptor 3)
+            }
 
             $gameMessage.add("¡Desafío superado! Puntaje: " + event.data.puntaje);
         }
