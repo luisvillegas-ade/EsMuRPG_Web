@@ -1,7 +1,8 @@
 [
 null,
-{"id":1,"list":[{"code":0,"indent":0,"parameters":[]}],"name":"","switchId":1,"trigger":0},
-{"id":2,"list":[{"code":0,"indent":0,"parameters":[]}],"name":"","switchId":1,"trigger":0},
+{"id":1,"list":[{"code":355,"indent":0,"parameters":["window.abrirDesafio = function(nombreCarpeta) {"]},{"code":655,"indent":0,"parameters":["    // 1. Creamos la pantalla (Iframe)"]},{"code":655,"indent":0,"parameters":["    var iframe = document.createElement('iframe');"]},{"code":655,"indent":0,"parameters":["    iframe.id = 'pantalla_minijuego';"]},{"code":655,"indent":0,"parameters":["    "]},{"code":655,"indent":0,"parameters":["    // 2. Le decimos qué archivo abrir (la carpeta que vos quieras)"]},{"code":655,"indent":0,"parameters":["    iframe.src = 'desafios/' + nombreCarpeta + '/index.html';"]},{"code":655,"indent":0,"parameters":["    "]},{"code":655,"indent":0,"parameters":["    // 3. Diseño: Que ocupe casi toda la pantalla y esté arriba de todo"]},{"code":655,"indent":0,"parameters":["    iframe.style.position = 'fixed';"]},{"code":655,"indent":0,"parameters":["    iframe.style.top = '10%';"]},{"code":655,"indent":0,"parameters":["    iframe.style.left = '10%';"]},{"code":0,"indent":0,"parameters":[]}],"name":"Sistema_Cargador","switchId":1,"trigger":0},
+{"id":2,"list":[{"code":231,"indent":0,"parameters":[1,"material_chacarera",1,0,400,400,70,70,255,0]},{"code":101,"indent":0,"parameters":["",0,0,2,""]},{"code":401,"indent":0,"parameters":["--- Material de Apoyo: Percusión --- "]},{"code":401,"indent":0,"parameters":["\\nPresiona cualquier tecla para cerrar."]},{"code":235,"indent":0,"parameters":[1]},{"code":0,"indent":0,"parameters":[]}],"name":"Leer_Material_Percusion","switchId":1,"trigger":0},
 {"id":3,"list":[{"code":0,"indent":0,"parameters":[]}],"name":"","switchId":1,"trigger":0},
-{"id":4,"list":[{"code":0,"indent":0,"parameters":[]}],"name":"","switchId":1,"trigger":0}
+{"id":4,"list":[{"code":0,"indent":0,"parameters":[]}],"name":"","switchId":1,"trigger":0},
+{"id":5,"list":[{"code":0,"indent":0,"parameters":[]}],"name":"","switchId":1,"trigger":0}
 ]

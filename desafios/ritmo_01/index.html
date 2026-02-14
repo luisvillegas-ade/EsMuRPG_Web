@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academia Rítmica</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+    * { font-family: 'Fredoka', sans-serif; }
+    .staff-line { background: #2d1b0e; height: 2px; }
+    .note-hit { animation: noteHit 0.3s ease-out; }
+    @keyframes noteHit { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+    .user-note { animation: fadeIn 0.2s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    .playing .beat-indicator { animation: pulse 0.5s ease-in-out infinite; }
+  </style>
+</head>
+<body class="h-full bg-slate-900 text-white overflow-hidden flex items-center justify-center p-2">
+
+  <div id="app-container" class="w-full max-w-4xl bg-slate-800 rounded-3xl shadow-2xl p-4 border-4 border-amber-400">
+    
+    <!-- Header Minimalista -->
+    <div class="flex justify-between items-center mb-4 gap-2">
+      <div class="flex gap-2">
+        <div class="bg-amber-500/20 rounded-xl px-3 py-1 border-2 border-amber-400">
+          <span class="text-amber-300 text-sm">Puntos:</span> <span id="score" class="font-bold text-xl">0</span>
+        </div>
+        <div class="bg-purple-500/20 rounded-xl px-3 py-1 border-2 border-purple-400">
+          <span class="text-purple-300 text-sm">Compases:</span> <span id="measure-count" class="font-bold text-xl">0</span>/8
+        </div>
+      </div>
+      <button id="start-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-xl shadow-lg transition-all">▶️ Iniciar</button>
+    </div>
+
+    <!-- Pentagrama Guía (Ajustado para no amontonar) -->
+    <div class="relative bg-slate-700/50 rounded-2xl p-4 border-2 border-blue-400 mb-4">
+      <div class="flex items-center">
+        <div class="text-5xl mr-2 text-blue-400">𝄞</div>
+        <div class="flex flex-col items-center mr-4 font-bold text-blue-400"><span>4</span><span>4</span></div>
+        <div class="flex-1 relative h-20">
+          <div class="absolute w-full top-0 staff-line"></div>
+          <div class="absolute w-full top-5 staff-line"></div>
+          <div class="absolute w-full top-10 staff-line"></div>
+          <div class="absolute w-full top-15 staff-line"></div>
+          <div class="absolute w-full top-20 staff-line"></div>
+          <!-- Contenedor de notas con ancho completo -->
+          <div id="reference-notes" class="absolute inset-0 flex justify-around items-center w-full px-2">
+            <div class="note flex flex-col items-center" data-beat="0"><div class="w-1 h-10 bg-blue-400 -mb-1 ml-3"></div><div class="w-6 h-5 bg-blue-400 rounded-full -rotate-12"></div></div>
+            <div class="note flex flex-col items-center" data-beat="1"><div class="w-1 h-10 bg-blue-400 -mb-1 ml-3"></div><div class="w-6 h-5 bg-blue-400 rounded-full -rotate-12"></div></div>
+            <div class="note flex flex-col items-center" data-beat="2"><div class="w-1 h-10 bg-blue-400 -mb-1 ml-3"></div><div class="w-6 h-5 bg-blue-400 rounded-full -rotate-12"></div></div>
+            <div class="note flex flex-col items-center" data-beat="3"><div class="w-1 h-10 bg-blue-400 -mb-1 ml-3"></div><div class="w-6 h-5 bg-blue-400 rounded-full -rotate-12"></div></div>
+          </div>
+          <div id="beat-indicator" class="absolute top-0 w-1.5 h-full bg-red-500 rounded-full opacity-0" style="left: 0;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pentagrama Usuario -->
+    <div class="relative bg-slate-700/50 rounded-2xl p-4 border-2 border-purple-400">
+      <div class="flex items-center">
+        <div class="text-5xl mr-2 text-purple-400">𝄞</div>
+        <div class="flex-1 relative h-20">
+          <div class="absolute w-full bg-purple-400/30 h-[2px] top-0"></div>
+          <div class="absolute w-full bg-purple-400/30 h-[2px] top-5"></div>
+          <div class="absolute w-full bg-purple-400/30 h-[2px] top-10"></div>
+          <div class="absolute w-full bg-purple-400/30 h-[2px] top-15"></div>
+          <div class="absolute w-full bg-purple-400/30 h-[2px] top-20"></div>
+          <div id="user-notes" class="absolute inset-0 flex justify-around items-center w-full px-2">
+            <div class="user-note-slot w-12 h-20 flex justify-center items-center" id="slot-0"></div>
+            <div class="user-note-slot w-12 h-20 flex justify-center items-center" id="slot-1"></div>
+            <div class="user-note-slot w-12 h-20 flex justify-center items-center" id="slot-2"></div>
+            <div class="user-note-slot w-12 h-20 flex justify-center items-center" id="slot-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="feedback" class="text-center mt-4 text-xl font-bold h-8 text-amber-300">Presiona ESPACIO</div>
+
+   <!-- Modal de Victoria (CENTRADOR INFALIBLE) -->
+    <div id="victory-modal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; display: none; align-items: center; justify-content: center;">
+      <div style="background: linear-gradient(to bottom, #fcd34d, #fb923c); border: 4px solid #fef3c7; border-radius: 24px; padding: 30px; text-align: center; width: 280px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+        <div style="font-size: 50px; margin-bottom: 10px;">🏆</div>
+        <h2 style="font-size: 24px; font-weight: bold; color: #78350f; margin-bottom: 10px; font-family: 'Fredoka', sans-serif;">¡Excelente!</h2>
+        <p style="color: #78350f; font-weight: 600; margin-bottom: 20px; font-size: 14px; font-family: 'Fredoka', sans-serif;">Lección completada con éxito.</p>
+        <button id="continue-btn" style="background: #16a34a; color: white; font-weight: bold; padding: 12px 0; width: 100%; border-radius: 12px; border: none; cursor: pointer; font-size: 16px; box-shadow: 0 4px 0 #15803d;">
+          CONTINUAR ➡️
+        </button>
+      </div>
+    </div>
+
+  <script>
+    // Configuración de Audio (Funciona mejor en navegadores modernos)
+    let audioCtx = null;
+    function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    function playTone(freq, dur) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(); osc.stop(audioCtx.currentTime + dur);
+    }
+
+    // Estado del Juego
+    let isPlaying = false, score = 0, measureCount = 0, currentBeat = 0, tempo = 80;
+    let lastBeatTime = 0, userHits = [false, false, false, false];
+
+    const startBtn = document.getElementById('start-btn');
+    const beatIndicator = document.getElementById('beat-indicator');
+    const scoreDisplay = document.getElementById('score');
+    const measureDisplay = document.getElementById('measure-count');
+    const victoryModal = document.getElementById('victory-modal');
+
+    function startGame() {
+      initAudio();
+      if (isPlaying) { location.reload(); return; }
+      isPlaying = true;
+      startBtn.textContent = "⏹ Detener";
+      startBtn.classList.replace('bg-green-500', 'bg-red-500');
+      beatIndicator.style.opacity = "1";
+      runLoop();
+    }
+
+    function runLoop() {
+      if (!isPlaying) return;
+      lastBeatTime = Date.now();
+      playTone(currentBeat === 0 ? 880 : 440, 0.1);
+      
+      // Update visual indicator
+      const positions = [12, 37, 62, 87];
+      beatIndicator.style.left = `${positions[currentBeat]}%`;
+
+      setTimeout(() => {
+        if (!isPlaying) return;
+        if (currentBeat === 3) {
+          evaluarCompas();
+          currentBeat = 0;
+        } else {
+          currentBeat++;
+        }
+        runLoop();
+      }, 60000 / tempo);
+    }
+
+    function handleInput() {
+      if (!isPlaying) return;
+      playTone(150, 0.1);
+      const diff = Math.abs(Date.now() - lastBeatTime);
+      const margin = (60000 / tempo) * 0.25;
+
+      if (diff < margin && !userHits[currentBeat]) {
+        userHits[currentBeat] = true;
+        score += 100;
+        scoreDisplay.textContent = score;
+        document.getElementById(`slot-${currentBeat}`).innerHTML = `
+          <div class="user-note flex flex-col items-center">
+            <div class="w-1 h-10 bg-green-400 -mb-1 ml-3"></div>
+            <div class="w-6 h-5 bg-green-400 rounded-full -rotate-12"></div>
+            <span class="text-xs font-bold text-green-400">★</span>
+          </div>`;
+        document.getElementById('feedback').textContent = "¡PERFECTO!";
+      } else {
+        document.getElementById('feedback').textContent = "¡UPS!";
+      }
+    }
+
+    function evaluarCompas() {
+      const hits = userHits.filter(h => h).length;
+      if (hits >= 3) { 
+        measureCount++;
+        measureDisplay.textContent = measureCount;
+        if (measureCount >= 8) {
+          isPlaying = false;
+          // CAMBIO AQUÍ: Forzamos el mostrado del modal
+          victoryModal.style.display = 'flex'; 
+        }
+      }
+      userHits = [false, false, false, false];
+      for(let i=0; i<4; i++) document.getElementById(`slot-${i}`).innerHTML = "";
+    }
+
+    // --- COMUNICACIÓN CON EL RPG ---
+    document.getElementById('continue-btn').addEventListener('click', () => {
+      // Ocultamos el cartel
+      victoryModal.style.display = 'none';
+      // Avisamos al RPG
+      if (window.parent) {
+        window.parent.postMessage({ tipo: "FIN_DESAFIO", puntaje: score }, "*");
+      }
+    });
+
+    startBtn.addEventListener('click', startGame);
+    window.addEventListener('keydown', (e) => { if(e.code === 'Space') { e.preventDefault(); handleInput(); } });
+    
+    // --- BOTÓN DE ESCAPE SEGURO ---
+// Usamos una función que se ejecute cuando el botón esté cargado
+document.addEventListener('DOMContentLoaded', () => {
+    const btnCanc = document.getElementById('btn-cancelar');
+    if (btnCanc) {
+        btnCanc.onclick = function() {
+            if (confirm("¿Seguro que querés salir de la lección?")) {
+                console.log("Enviando señal de cancelación..."); // Esto es para debug
+                if (window.parent) {
+                    window.parent.postMessage({ tipo: "CANCELAR_DESAFIO" }, "*");
+                }
+            }
+        };
+    }
+});
+  </script>
+</body>
+<button id="btn-cancelar" style="position: fixed; top: 10px; right: 10px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">X</button>
+</html>
