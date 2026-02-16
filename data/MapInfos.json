@@ -1,7 +1,7 @@
 [
 null,
-{"id":1,"expanded":true,"name":"MAP001","order":1,"parentId":0,"scrollX":550.2222222222222,"scrollY":344.8888888888889},
-{"id":2,"expanded":true,"name":"Habitación Inicial","order":2,"parentId":1,"scrollX":495.2,"scrollY":310.4},
-{"id":3,"expanded":false,"name":"Mundo 1","order":4,"parentId":4,"scrollX":1857,"scrollY":1164},
-{"id":4,"expanded":true,"name":"Parque","order":3,"parentId":1,"scrollX":3301.3333333333335,"scrollY":2069.3333333333335}
+{"id":1,"expanded":true,"name":"MAP001","order":2,"parentId":0,"scrollX":928.5,"scrollY":594},
+{"id":2,"expanded":true,"name":"Habitación Inicial","order":3,"parentId":1,"scrollX":928.5,"scrollY":582},
+{"id":3,"expanded":false,"name":"Mapa del Norte","order":1,"parentId":0,"scrollX":1842,"scrollY":2154},
+{"id":4,"expanded":true,"name":"Patio de tierra","order":4,"parentId":1,"scrollX":940.5,"scrollY":606}
 ]

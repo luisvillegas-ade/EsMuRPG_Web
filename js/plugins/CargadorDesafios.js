@@ -1,6 +1,6 @@
 window.abrirDesafio = function (nombreCarpeta) {
-    // 1. APAGAR LA MÚSICA DEL MAPA (Fade out de 1 segundo para que no sea brusco)
-    AudioManager.fadeOutBgm(1); // <--- NUEVO
+    // 1. APAGAR LA MÚSICA DEL MAPA
+    AudioManager.fadeOutBgm(1);
 
     var iframe = document.createElement('iframe');
     iframe.id = 'pantalla_minijuego';
@@ -22,20 +22,23 @@ window.abrirDesafio = function (nombreCarpeta) {
     window.addEventListener('message', function receptor(event) {
         var pantalla = document.getElementById('pantalla_minijuego');
 
-        // --- CASO: GANASTE O CANCELASTE ---
         if (event.data.tipo === "FIN_DESAFIO" || event.data.tipo === "CANCELAR_DESAFIO") {
             if (pantalla) document.body.removeChild(pantalla);
             window.removeEventListener('message', receptor);
 
             // 2. VOLVER A ENCENDER LA MÚSICA DEL MAPA
-            $gameMap.autoplay(); // <--- NUEVO: Reinicia la música configurada en el mapa actual
+            $gameMap.autoplay();
 
             if (event.data.tipo === "FIN_DESAFIO") {
+                // --- LÓGICA DE INTERRUPTORES ACTUALIZADA ---
                 if (!event.data.id || event.data.id === "ritmo_01") {
-                    $gameSwitches.setValue(1, true);
+                    $gameSwitches.setValue(1, true); // Interruptor 1: Negras
                 } else if (event.data.id === "chacarera") {
-                    $gameSwitches.setValue(2, true);
+                    $gameSwitches.setValue(2, true); // Interruptor 2: Chacarera
+                } else if (event.data.id === "vals") {
+                    $gameSwitches.setValue(3, true); // <--- NUEVO: Interruptor 3: Vals
                 }
+
                 $gameMessage.add("¡Desafío superado!");
             } else {
                 $gameMessage.add("No te preocupes, podés volver cuando quieras.");
