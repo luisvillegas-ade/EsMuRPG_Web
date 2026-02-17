@@ -3,335 +3,429 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Academia Rítmica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Taller de Vals</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap');
 
     * {
       font-family: 'Fredoka', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background-color: #0f172a;
+      /* Slate 900 */
+      color: #fbbf24;
+      /* Amber 400 */
+      margin: 0;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .staff-line {
-      background: #2d1b0e;
+      background: #475569;
       height: 2px;
     }
 
-    .note-hit {
-      animation: noteHit 0.3s ease-out;
+    .beat-indicator {
+      transition: left 0.1s linear;
+      box-shadow: 0 0 15px #60a5fa;
+      width: 4px;
+      border-radius: 4px;
+      background-color: white;
     }
 
-    @keyframes noteHit {
+    /* Animación de texto flotante (Feedback) */
+    .feedback-float {
+      animation: floatUp 0.6s ease-out forwards;
+      position: absolute;
+      font-weight: 900;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    @keyframes floatUp {
       0% {
-        transform: scale(1);
-      }
-
-      50% {
-        transform: scale(1.3);
-      }
-
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    .user-note {
-      animation: fadeIn 0.2s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from {
+        transform: translateY(0) scale(0.8);
         opacity: 0;
-        transform: scale(0.5);
       }
 
-      to {
+      20% {
+        transform: translateY(-10px) scale(1.2);
         opacity: 1;
-        transform: scale(1);
+      }
+
+      100% {
+        transform: translateY(-40px) scale(1);
+        opacity: 0;
       }
     }
 
-    @keyframes pulse {
+    /* Estilo de la Nota Musical */
+    .note-stem {
+      position: absolute;
+      width: 4px;
+      height: 45px;
+      bottom: 10px;
+      right: 4px;
+      border-radius: 2px;
+    }
 
-      0%,
-      100% {
-        transform: scale(1);
+    .note-head {
+      width: 24px;
+      height: 18px;
+      border-radius: 50%;
+      transform: rotate(-20deg);
+    }
+
+    /* Brillo al acertar */
+    .hit-animation .note-head {
+      animation: glow 0.2s ease-out;
+    }
+
+    @keyframes glow {
+      0% {
+        filter: brightness(1);
+        transform: rotate(-20deg) scale(1);
       }
 
       50% {
-        transform: scale(1.05);
+        filter: brightness(2);
+        transform: rotate(-20deg) scale(1.3);
+      }
+
+      100% {
+        filter: brightness(1);
+        transform: rotate(-20deg) scale(1);
       }
     }
 
-    .playing .beat-indicator {
-      animation: pulse 0.5s ease-in-out infinite;
+    #touch-area {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
   </style>
-  <style>
-    body {
-      box-sizing: border-box;
-    }
-  </style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
 </head>
 
-<body class="h-full bg-slate-900 text-white overflow-hidden flex items-center justify-center p-2">
-  <div id="app-container" class="w-full max-w-4xl bg-slate-800 rounded-3xl shadow-2xl p-4 border-4 border-amber-400">
-    <!-- Header Minimalista -->
-    <div class="flex justify-between items-center mb-4 gap-2">
-      <div class="flex gap-2">
-        <div class="bg-amber-500/20 rounded-xl px-3 py-1 border-2 border-amber-400"><span
-            class="text-amber-300 text-sm">Puntos:</span> <span id="score" class="font-bold text-xl">0</span>
-        </div>
-        <div class="bg-purple-500/20 rounded-xl px-3 py-1 border-2 border-purple-400"><span
-            class="text-purple-300 text-sm">Compases:</span> <span id="measure-count"
-            class="font-bold text-xl">0</span>/8
-        </div>
-      </div><button id="start-btn"
-        class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-xl shadow-lg transition-all">▶️
-        Iniciar</button>
-    </div><!-- Pentagrama Guía -->
-    <div class="relative bg-slate-700/50 rounded-2xl p-4 border-2 border-blue-400 mb-4">
-      <div class="flex items-center">
-        <div class="text-5xl mr-2 text-blue-400">
-          𝄞
-        </div>
-        <div class="flex flex-col items-center mr-4 font-bold text-blue-400" id="time-signature">
-          <span>3</span><span>4</span>
-        </div>
-        <div class="flex-1 relative h-20">
-          <div class="absolute w-full top-0 staff-line"></div>
-          <div class="absolute w-full top-5 staff-line"></div>
-          <div class="absolute w-full top-10 staff-line"></div>
-          <div class="absolute w-full top-15 staff-line"></div>
-          <div class="absolute w-full top-20 staff-line"></div>
-          <div id="reference-notes" class="absolute inset-0 flex justify-around items-center w-full px-2">
-            <div class="note flex flex-col items-center" data-beat="0">
-              <div class="w-1 h-10 bg-blue-400 -mb-1 ml-3"></div>
-              <div class="w-6 h-5 bg-blue-400 rounded-full -rotate-12"></div>
-            </div>
-            <div class="note flex flex-col items-center" data-beat="1">
-              <div class="w-1 h-10 bg-blue-400 -mb-1 ml-3"></div>
-              <div class="w-6 h-5 bg-blue-400 rounded-full -rotate-12"></div>
-            </div>
-            <div class="note flex flex-col items-center" data-beat="2">
-              <div class="w-1 h-10 bg-blue-400 -mb-1 ml-3"></div>
-              <div class="w-6 h-5 bg-blue-400 rounded-full -rotate-12"></div>
-            </div>
-          </div>
-          <div id="beat-indicator" class="absolute top-0 w-1.5 h-full bg-red-500 rounded-full opacity-0"
-            style="left: 0;"></div>
-        </div>
+<body>
+
+  <div id="app-container"
+    class="w-full max-w-2xl bg-slate-800 rounded-3xl border-2 border-blue-500/50 shadow-2xl p-6 relative flex flex-col justify-between"
+    style="min-height: 320px;">
+
+    <button id="btn-cancelar"
+      class="absolute -top-3 -right-3 bg-red-600 hover:bg-red-500 text-white w-10 h-10 rounded-full font-bold shadow-lg border-2 border-white z-50">X</button>
+
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-4">
+      <div class="bg-slate-900/50 px-6 py-2 rounded-full border border-blue-500/30 text-center shadow-inner">
+        <span class="text-blue-400 text-[10px] uppercase tracking-widest mr-2">Compás</span>
+        <span class="text-xl font-bold text-blue-200"><span id="measure-count">0</span><span
+            class="text-sm text-blue-500">/8</span></span>
       </div>
-    </div><!-- Pentagrama Usuario -->
-    <div class="relative bg-slate-700/50 rounded-2xl p-4 border-2 border-purple-400">
-      <div class="flex items-center">
-        <div class="text-5xl mr-2 text-purple-400">
-          𝄞
+      <button id="start-btn"
+        class="bg-blue-600 text-white font-bold py-2 px-8 rounded-full shadow-lg border-2 border-blue-400 active:scale-95 transition-all hover:bg-blue-500">
+        ▶️ INICIAR
+      </button>
+    </div>
+
+    <!-- PENTAGRAMA -->
+    <div
+      class="relative bg-slate-900/80 rounded-2xl p-4 border border-blue-500/30 mb-4 flex-grow flex items-center justify-center overflow-hidden">
+
+      <!-- Capa para textos flotantes -->
+      <div id="feedback-layer" class="absolute inset-0 pointer-events-none"></div>
+
+      <div class="flex items-center w-full relative z-10">
+        <!-- Cifra -->
+        <div class="flex flex-col items-center justify-center mr-8 font-black text-4xl text-blue-500/80 leading-none">
+          <span>3</span><span class="border-t-4 border-blue-500/50 w-full my-1 rounded"></span><span>4</span>
         </div>
-        <div class="flex-1 relative h-20">
-          <div class="absolute w-full bg-purple-400/30 h-[2px] top-0"></div>
-          <div class="absolute w-full bg-purple-400/30 h-[2px] top-5"></div>
-          <div class="absolute w-full bg-purple-400/30 h-[2px] top-10"></div>
-          <div class="absolute w-full bg-purple-400/30 h-[2px] top-15"></div>
-          <div class="absolute w-full bg-purple-400/30 h-[2px] top-20"></div>
-          <div id="user-notes" class="absolute inset-0 flex justify-around items-center w-full px-2">
-            <div class="user-note-slot w-12 h-20 flex justify-center items-center" id="slot-0"></div>
-            <div class="user-note-slot w-12 h-20 flex justify-center items-center" id="slot-1"></div>
-            <div class="user-note-slot w-12 h-20 flex justify-center items-center" id="slot-2"></div>
+
+        <div class="flex-1 relative h-32 flex items-center">
+          <!-- Líneas -->
+          <div class="absolute w-full top-6 staff-line"></div>
+          <div class="absolute w-full top-12 staff-line"></div>
+          <div class="absolute w-full top-18 staff-line"></div>
+          <div class="absolute w-full top-24 staff-line"></div>
+          <div class="absolute w-full top-30 staff-line"></div>
+
+          <!-- NOTAS -->
+          <div id="notes-container" class="absolute inset-0 flex justify-around items-center w-full">
+            <!-- T1 -->
+            <div class="flex flex-col items-center relative transition-opacity duration-200 opacity-50" id="slot-0">
+              <div class="relative note-body">
+                <div class="note-stem bg-amber-500"></div>
+                <div class="note-head bg-amber-500 shadow-[0_0_15px_rgba(251,191,36,0.6)]"></div>
+              </div>
+              <span class="text-[9px] mt-2 font-bold text-amber-500 tracking-widest">UNO</span>
+            </div>
+            <!-- T2 -->
+            <div class="flex flex-col items-center relative transition-opacity duration-200 opacity-50" id="slot-1">
+              <div class="relative note-body">
+                <div class="note-stem bg-blue-400"></div>
+                <div class="note-head bg-blue-400"></div>
+              </div>
+              <span class="text-[9px] mt-2 font-bold text-blue-400">dos</span>
+            </div>
+            <!-- T3 -->
+            <div class="flex flex-col items-center relative transition-opacity duration-200 opacity-50" id="slot-2">
+              <div class="relative note-body">
+                <div class="note-stem bg-blue-400"></div>
+                <div class="note-head bg-blue-400"></div>
+              </div>
+              <span class="text-[9px] mt-2 font-bold text-blue-400">tres</span>
+            </div>
           </div>
+
+          <!-- Cursor -->
+          <div id="beat-indicator" class="absolute top-0 h-full opacity-0"></div>
         </div>
       </div>
     </div>
-    <div id="feedback" class="text-center mt-4 text-xl font-bold h-8 text-amber-300">
-      Presiona ESPACIO
-    </div><!-- Botón táctil para celular --> <button id="touch-btn"
-      style="display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #f59e0b, #f97316); color: white; font-weight: bold; padding: 20px 40px; border-radius: 60px; border: none; cursor: pointer; font-size: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; touch-action: manipulation;">
-      🎵 TOCAR </button>
-    <div id="victory-modal" class="hidden"
-      style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; display: none; align-items: center; justify-content: center;">
+
+    <!-- Zona Táctil -->
+    <div id="touch-area"
+      class="md:hidden fixed inset-x-0 bottom-0 h-[40vh] z-40 bg-gradient-to-t from-blue-900/20 to-transparent flex items-end justify-center pb-8">
+      <span
+        class="text-blue-100/30 font-bold text-xs tracking-widest border border-white/10 px-4 py-1 rounded-full">ZONA DE
+        TOQUE</span>
+    </div>
+
+    <!-- Modal Victoria -->
+    <div id="victory-modal"
+      style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.98); z-index: 10000; align-items: center; justify-content: center;">
       <div
-        style="background: linear-gradient(to bottom, #fcd34d, #fb923c); border: 4px solid #fef3c7; border-radius: 24px; padding: 30px; text-align: center; width: 280px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-        <div style="font-size: 50px; margin-bottom: 10px;">
-          🏆
-        </div>
-        <h2
-          style="font-size: 24px; font-weight: bold; color: #78350f; margin-bottom: 10px; font-family: 'Fredoka', sans-serif;">
-          ¡Excelente!</h2>
-        <p
-          style="color: #78350f; font-weight: 600; margin-bottom: 20px; font-size: 14px; font-family: 'Fredoka', sans-serif;">
-          Lección completada con éxito.</p><button id="continue-btn"
-          style="background: #16a34a; color: white; font-weight: bold; padding: 12px 0; width: 100%; border-radius: 12px; border: none; cursor: pointer; font-size: 16px; box-shadow: 0 4px 0 #15803d;">
-          CONTINUAR ➡️ </button>
+        class="bg-slate-800 border-2 border-amber-400 rounded-3xl p-8 text-center max-w-xs shadow-2xl relative w-full mx-4">
+        <div id="final-icon" class="text-7xl mb-4 animate-bounce">✨</div>
+        <h2 id="final-title" class="text-3xl font-black text-amber-400 mb-2"></h2>
+        <p id="final-msg" class="text-slate-300 mb-8 font-medium text-sm"></p>
+        <button id="continue-btn"
+          class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl shadow-lg text-lg transition-transform active:scale-95">
+          CONTINUAR
+        </button>
       </div>
     </div>
-    <script>
-      let audioCtx = null;
-      let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-      const touchBtn = document.getElementById('touch-btn');
+  </div>
 
-      if (isMobile) {
-        touchBtn.style.display = 'block';
-      }
+  <script>
+    let isPlaying = false;
+    let internalScore = 0;
+    let measureCount = 0;
+    let currentBeat = 0;
+    let tempo = 115;
+    let audioCtx = null;
+    let lastBeatTime = 0;
+    let userHits = [false, false, false];
+    let audioUnlocked = false;
 
-      function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    function unlockAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      audioUnlocked = true;
+    }
 
-      function playMetronomeClick(isFirstBeat) {
-        if (!audioCtx) return;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(isFirstBeat ? 880 : 440, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.05);
-      }
+    function playSound(type) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
 
-      function playDrumSound() {
-        if (!audioCtx) return;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.15);
-
+      if (type === 'click') {
+        osc.frequency.setValueAtTime(currentBeat === 0 ? 600 : 400, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+      } else {
+        // Sonido de instrumento (más rico para el usuario)
+        const freq = (currentBeat === 0) ? 220 : 330;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
         gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc.start(audioCtx.currentTime);
-        osc.stop(audioCtx.currentTime + 0.15);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
       }
 
-      let isPlaying = false, score = 0, measureCount = 0, currentBeat = 0, tempo = 150;
-      let lastBeatTime = 0, userHits = [false, false, false];
-      const totalBeatsInMeasure = 3;
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.35);
+    }
 
-      const startBtn = document.getElementById('start-btn');
-      const beatIndicator = document.getElementById('beat-indicator');
-      const scoreDisplay = document.getElementById('score');
-      const measureDisplay = document.getElementById('measure-count');
-      const victoryModal = document.getElementById('victory-modal');
+    function runLoop() {
+      if (!isPlaying) return;
+      lastBeatTime = Date.now();
+      playSound('click');
 
-      function startGame() {
-        initAudio();
-        if (isPlaying) { location.reload(); return; }
+      const positions = [16, 50, 83];
+      const indicator = document.getElementById('beat-indicator');
+      indicator.style.left = positions[currentBeat] + "%";
+      indicator.style.opacity = 1;
+
+      for (let i = 0; i < 3; i++) {
+        const slot = document.getElementById(`slot-${i}`);
+        if (i === currentBeat) {
+          slot.style.opacity = "1";
+          slot.style.transform = "scale(1.1)";
+        } else {
+          slot.style.opacity = "0.4";
+          slot.style.transform = "scale(1)";
+        }
+      }
+
+      setTimeout(() => {
+        if (!isPlaying) return;
+        if (currentBeat === 2) {
+          evaluarCompas();
+          currentBeat = 0;
+        } else {
+          currentBeat++;
+        }
+        runLoop();
+      }, 60000 / tempo);
+    }
+
+    // --- FUNCIÓN DE FEEDBACK FLOTANTE ---
+    function showFloatingFeedback(text, color, slotIndex) {
+      const layer = document.getElementById('feedback-layer');
+      const note = document.getElementById(`slot-${slotIndex}`);
+      const rect = note.getBoundingClientRect();
+      const containerRect = document.getElementById('app-container').getBoundingClientRect();
+
+      const el = document.createElement('div');
+      el.textContent = text;
+      el.className = "feedback-float";
+      el.style.color = color;
+      // Posicionar sobre la nota exacta
+      el.style.left = (rect.left - containerRect.left + rect.width / 2 - 30) + "px";
+      el.style.top = (rect.top - containerRect.top - 20) + "px";
+
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), 600);
+    }
+
+    function handleInput(e) {
+      if (!isPlaying) return;
+      if (e.type === 'keydown' && e.code !== 'Space') return;
+      if (e.type === 'keydown') e.preventDefault();
+      if (!audioUnlocked) unlockAudio();
+
+      const diff = Math.abs(Date.now() - lastBeatTime);
+
+      // Lógica de Ventanas de Precisión
+      if (diff < 300) {
+        if (!userHits[currentBeat]) {
+          userHits[currentBeat] = true;
+
+          let points = 0;
+          let msg = "";
+          let color = "";
+
+          if (diff < 100) {
+            msg = "¡PERFECTO!";
+            color = "#fbbf24"; // Dorado
+            points = 100;
+          } else if (diff < 200) {
+            msg = "¡BIEN!";
+            color = "#60a5fa"; // Azul
+            points = 70;
+          } else {
+            msg = "¡CASI!";
+            color = "#94a3b8"; // Gris
+            points = 40;
+          }
+
+          internalScore += points;
+          showFloatingFeedback(msg, color, currentBeat);
+          playSound('instrument');
+
+          // Animar la nota
+          const slot = document.getElementById(`slot-${currentBeat}`);
+          slot.classList.remove('hit-animation');
+          void slot.offsetWidth;
+          slot.classList.add('hit-animation');
+        }
+      }
+    }
+
+    function evaluarCompas() {
+      if (userHits[0] && userHits[1] && userHits[2]) {
+        measureCount++;
+        document.getElementById('measure-count').textContent = measureCount;
+        if (measureCount >= 8) finishGame();
+      }
+      userHits = [false, false, false];
+    }
+
+    function finishGame() {
+      isPlaying = false;
+      const modal = document.getElementById('victory-modal');
+      const title = document.getElementById('final-title');
+      const msg = document.getElementById('final-msg');
+      const icon = document.getElementById('final-icon');
+
+      const average = internalScore / (measureCount * 3);
+
+      if (average > 85) {
+        icon.textContent = "🏆";
+        title.textContent = "¡MAESTRO!";
+        title.style.color = "#fbbf24";
+        msg.textContent = "Tu precisión es digna del Anfiteatro. Ritmo perfecto.";
+      } else if (average > 60) {
+        icon.textContent = "✨";
+        title.textContent = "¡MUY BIEN!";
+        title.style.color = "#60a5fa";
+        msg.textContent = "Tienes el aire del vals, vas por buen camino.";
+      } else {
+        icon.textContent = "👍";
+        title.textContent = "¡BIEN HECHO!";
+        title.style.color = "#94a3b8";
+        msg.textContent = "Completaste la lección. ¡A seguir practicando!";
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    // --- EVENTOS ---
+    document.getElementById('start-btn').addEventListener('click', (e) => {
+      unlockAudio();
+      if (isPlaying) {
+        location.reload();
+      } else {
         isPlaying = true;
-        startBtn.textContent = "⏹ Detener";
-        startBtn.classList.replace('bg-green-500', 'bg-red-500');
-        beatIndicator.style.opacity = "1";
+        internalScore = 0;
+        measureCount = 0;
+        e.target.textContent = "REINICIAR";
+        e.target.className = "bg-slate-700 text-slate-300 font-bold py-2 px-6 rounded-full border border-slate-500";
         runLoop();
       }
+    });
 
-      function runLoop() {
-        if (!isPlaying) return;
-        lastBeatTime = Date.now();
-        playMetronomeClick(currentBeat === 0);
+    window.addEventListener('keydown', handleInput);
 
-        const positions = [16.6, 50, 83.3];
-        beatIndicator.style.left = `${positions[currentBeat]}%`;
+    const touchArea = document.getElementById('touch-area');
+    touchArea.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      handleInput(e);
+    }, { passive: false });
 
-        setTimeout(() => {
-          if (!isPlaying) return;
-          if (currentBeat === (totalBeatsInMeasure - 1)) {
-            evaluarCompas();
-            currentBeat = 0;
-          } else {
-            currentBeat++;
-          }
-          runLoop();
-        }, 60000 / tempo);
+    document.getElementById('btn-cancelar').onclick = () => {
+      if (confirm("¿Salir?")) {
+        if (window.parent) window.parent.postMessage({ tipo: "CANCELAR_DESAFIO" }, "*");
       }
+    };
 
-      function handleInput() {
-        if (!isPlaying) return;
-        initAudio();
-        playDrumSound();
-
-        const beatDuration = 60000 / tempo;
-        const diff = Math.abs(Date.now() - lastBeatTime);
-        const margin = beatDuration * 0.65;
-
-        if (diff < margin && !userHits[currentBeat]) {
-          userHits[currentBeat] = true;
-          score += 100;
-          scoreDisplay.textContent = score;
-          document.getElementById(`slot-${currentBeat}`).innerHTML = `
-          <div class="user-note flex flex-col items-center">
-            <div class="w-1 h-10 bg-green-400 -mb-1 ml-3"></div>
-            <div class="w-6 h-5 bg-green-400 rounded-full -rotate-12"></div>
-            <span class="text-xs font-bold text-green-400">★</span>
-          </div>`;
-          document.getElementById('feedback').textContent = "¡PERFECTO!";
-        } else {
-          document.getElementById('feedback').textContent = "¡UPS!";
-        }
+    document.getElementById('continue-btn').onclick = () => {
+      if (window.parent) {
+        window.parent.postMessage({ tipo: "FIN_DESAFIO", puntaje: internalScore, id: "vals" }, "*");
       }
-
-      function evaluarCompas() {
-        const hits = userHits.filter(h => h).length;
-        if (hits >= (totalBeatsInMeasure - 1)) {
-          measureCount++;
-          measureDisplay.textContent = measureCount;
-          if (measureCount >= 8) {
-            isPlaying = false;
-            victoryModal.style.display = 'flex';
-          }
-        }
-        userHits = new Array(totalBeatsInMeasure).fill(false);
-        for (let i = 0; i < totalBeatsInMeasure; i++) {
-          const slot = document.getElementById(`slot-${i}`);
-          if (slot) slot.innerHTML = "";
-        }
-      }
-
-      document.getElementById('continue-btn').addEventListener('click', () => {
-        victoryModal.style.display = 'none';
-        if (window.parent) {
-          window.parent.postMessage({ tipo: "FIN_DESAFIO", puntaje: score, id: "vals" }, "*");
-        }
-      });
-
-      startBtn.addEventListener('click', startGame);
-
-      window.addEventListener('keydown', (e) => {
-        if (e.code === 'Space') {
-          e.preventDefault();
-          handleInput();
-        }
-      });
-
-      touchBtn.addEventListener('click', handleInput);
-      touchBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        handleInput();
-      });
-
-      document.addEventListener('DOMContentLoaded', () => {
-        const btnCanc = document.getElementById('btn-cancelar');
-        if (btnCanc) {
-          btnCanc.onclick = function () {
-            if (confirm("¿Seguro que querés salir de la lección?")) {
-              if (window.parent) {
-                window.parent.postMessage({ tipo: "CANCELAR_DESAFIO" }, "*");
-              }
-            }
-          };
-        }
-      });
-    </script>
-  </div><button id="btn-cancelar"
-    style="position: fixed; top: 10px; right: 10px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">X</button>
-  <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9cdf3d08b3d8ee13',t:'MTc3MTEwMDEzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+    };
+  </script>
 </body>
 
 </html>

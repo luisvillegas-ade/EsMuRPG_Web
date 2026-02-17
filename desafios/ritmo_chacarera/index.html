@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Taller de Chacarera</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <style>
@@ -11,11 +11,16 @@
 
     * {
       font-family: 'Fredoka', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
+    /* Estilo Cyber-Folklore: Azul Noche y Dorado */
     body {
-      background-color: #1a120b;
-      color: #fcd34d;
+      background-color: #0f172a;
+      /* Slate 900 */
+      color: #fbbf24;
+      /* Amber 400 */
       margin: 0;
       overflow: hidden;
       height: 100vh;
@@ -25,12 +30,15 @@
     }
 
     .staff-line {
-      background: #78350f;
-      height: 3px;
+      background: #475569;
+      height: 2px;
     }
+
+    /* Slate 600 */
 
     .beat-indicator {
       transition: left 0.1s linear;
+      box-shadow: 0 0 10px #fbbf24;
     }
 
     .hit-animation {
@@ -40,163 +48,210 @@
     @keyframes boom {
       0% {
         transform: scale(1);
-      }
-
-      50% {
-        transform: scale(1.3);
-        filter: brightness(1.5);
+        filter: brightness(2);
       }
 
       100% {
         transform: scale(1);
+        filter: brightness(1);
       }
     }
-  </style>
-  <style>
-    body {
-      box-sizing: border-box;
+
+    /* Botón táctil mejorado */
+    #touch-area {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
   </style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
 </head>
 
 <body>
+
+  <!-- Contenedor Principal Estilo "Tarjeta/Libro" -->
   <div id="app-container"
-    class="w-full max-w-2xl bg-orange-950/90 rounded-3xl border-4 border-orange-600 shadow-2xl p-6 relative">
-    <!-- Botón Salir --> <button id="btn-cancelar"
-      style="position: absolute; top: -15px; right: -15px; background: #dc2626; color: white; border: 2px solid white; border-radius: 50%; width: 35px; height: 35px; font-weight: bold; cursor: pointer; z-index: 100;">X</button>
-    <!-- Marcadores -->
-    <div class="flex justify-between items-center mb-6">
+    class="w-full max-w-2xl bg-slate-800 rounded-3xl border-2 border-amber-500 shadow-2xl p-6 relative flex flex-col justify-between"
+    style="min-height: 320px;">
+
+    <!-- Botón Salir -->
+    <button id="btn-cancelar"
+      class="absolute -top-3 -right-3 bg-red-600 hover:bg-red-500 text-white w-10 h-10 rounded-full font-bold shadow-lg border-2 border-white z-50">X</button>
+
+    <!-- Header: Marcadores -->
+    <div class="flex justify-between items-center mb-4">
       <div class="flex gap-3">
-        <div class="bg-black/40 px-3 py-1 rounded-xl border border-orange-500 text-center"><span
-            class="text-orange-400 text-xs uppercase block">Aciertos</span> <span id="score"
-            class="text-xl font-bold">0</span>
+        <div class="bg-slate-900/50 px-4 py-2 rounded-xl border border-amber-500/30 text-center">
+          <span class="text-amber-500/70 text-[10px] uppercase block tracking-widest">Puntos</span>
+          <span id="score" class="text-xl font-bold text-amber-300">0</span>
         </div>
-        <div class="bg-black/40 px-3 py-1 rounded-xl border border-orange-500 text-center"><span
-            class="text-orange-400 text-xs uppercase block">Compases</span> <span id="measure-count"
-            class="text-xl font-bold">0</span>/8
+        <div class="bg-slate-900/50 px-4 py-2 rounded-xl border border-amber-500/30 text-center">
+          <span class="text-amber-500/70 text-[10px] uppercase block tracking-widest">Compases</span>
+          <span id="measure-count" class="text-xl font-bold text-amber-300">0</span><span
+            class="text-xs text-amber-600">/8</span>
         </div>
-      </div><button id="start-btn"
-        class="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-xl shadow-[0_4px_0_#14532d] active:shadow-none active:translate-y-1 transition-all">
-        ▶️ TOCAR </button>
-    </div><!-- Pentagrama 3/4 -->
-    <div class="relative bg-orange-100/5 rounded-2xl p-6 border-2 border-orange-500/30 mb-4">
-      <div class="flex items-center">
-        <div class="flex flex-col items-center justify-center mr-6 font-black text-3xl text-orange-400 leading-none">
-          <span>3</span><span class="border-t-2 border-orange-400 w-full my-1"></span><span>4</span>
+      </div>
+
+      <!-- Botón Iniciar (Grande) -->
+      <button id="start-btn"
+        class="bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold py-2 px-6 rounded-xl shadow-lg active:scale-95 transition-transform border border-green-400">
+        ▶️ INICIAR
+      </button>
+    </div>
+
+    <!-- PENTAGRAMA 3/4 (Visualización limpia) -->
+    <div class="relative bg-slate-900/40 rounded-2xl p-6 border border-amber-500/20 mb-2 flex-grow flex items-center">
+      <div class="flex items-center w-full">
+        <!-- Cifra -->
+        <div
+          class="flex flex-col items-center justify-center mr-6 font-black text-3xl text-amber-500 leading-none opacity-80">
+          <span>3</span><span class="border-t-2 border-amber-500 w-full my-1"></span><span>4</span>
         </div>
-        <div class="flex-1 relative h-24 flex items-center">
-          <div class="absolute w-full top-0 staff-line"></div>
-          <div class="absolute w-full top-8 staff-line"></div>
-          <div class="absolute w-full top-16 staff-line"></div>
-          <div class="absolute w-full top-24 staff-line"></div>
+
+        <div class="flex-1 relative h-28 flex items-center">
+          <!-- Líneas -->
+          <div class="absolute w-full top-2 staff-line"></div>
+          <div class="absolute w-full top-10 staff-line"></div>
+          <div class="absolute w-full top-18 staff-line"></div>
+          <div class="absolute w-full top-26 staff-line"></div>
+
+          <!-- NOTAS -->
           <div id="notes-container" class="absolute inset-0 flex justify-around items-center w-full">
-            <div class="flex flex-col items-center opacity-40" id="slot-0">
-              <div class="text-5xl">
-                𝄽
-              </div><span class="text-[10px] font-bold">ESPERA</span>
+            <!-- T1: Silencio -->
+            <div class="flex flex-col items-center opacity-30 transition-opacity duration-200" id="slot-0">
+              <div class="text-5xl">𝄽</div>
+              <span class="text-[9px] font-bold tracking-widest mt-2">ESPERA</span>
             </div>
-            <div class="flex flex-col items-center" id="slot-1">
-              <div class="w-1 h-12 bg-orange-400 mb-[-5px] ml-3"></div>
-              <div class="w-6 h-4 bg-orange-400 rounded-full -rotate-12 head"></div><span
-                class="text-[10px] font-bold">BOMBO</span>
+            <!-- T2: Golpe -->
+            <div class="flex flex-col items-center transition-opacity duration-200" id="slot-1">
+              <div class="relative">
+                <div class="w-1 h-14 bg-amber-500 absolute left-4 -top-12"></div>
+                <div class="w-8 h-6 bg-amber-500 rounded-[50%] -rotate-12 head shadow-[0_0_10px_rgba(251,191,36,0.3)]">
+                </div>
+              </div>
+              <span class="text-[9px] font-bold tracking-widest mt-2 text-amber-400">GOLPE</span>
             </div>
-            <div class="flex flex-col items-center" id="slot-2">
-              <div class="w-1 h-12 bg-orange-400 mb-[-5px] ml-3"></div>
-              <div class="w-6 h-4 bg-orange-400 rounded-full -rotate-12 head"></div><span
-                class="text-[10px] font-bold">BOMBO</span>
+            <!-- T3: Golpe -->
+            <div class="flex flex-col items-center transition-opacity duration-200" id="slot-2">
+              <div class="relative">
+                <div class="w-1 h-14 bg-amber-500 absolute left-4 -top-12"></div>
+                <div class="w-8 h-6 bg-amber-500 rounded-[50%] -rotate-12 head shadow-[0_0_10px_rgba(251,191,36,0.3)]">
+                </div>
+              </div>
+              <span class="text-[9px] font-bold tracking-widest mt-2 text-amber-400">GOLPE</span>
             </div>
           </div>
+
+          <!-- Cursor -->
           <div id="beat-indicator"
-            class="absolute top-0 w-1.5 h-full bg-yellow-400 shadow-[0_0_15px_yellow] opacity-0 rounded-full"></div>
+            class="absolute top-0 w-1 h-full bg-amber-300 rounded-full opacity-0 shadow-[0_0_15px_white]"></div>
         </div>
       </div>
     </div>
-    <div id="feedback" class="text-center h-6 text-lg font-bold text-yellow-500">
-      ¡CHACARERA! (1-2-3)
-    </div><!-- Botón táctil para celular --> <button id="touch-btn"
-      style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #f59e0b, #f97316); color: white; font-weight: bold; padding: 15px 30px; border-radius: 50px; border: none; cursor: pointer; font-size: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; touch-action: manipulation;">
-      🥁 TOCAR </button> <!-- Modal Victoria (CENTRADOR FIJO) -->
+
+    <!-- Feedback Texto -->
+    <div id="feedback" class="text-center h-8 text-xl font-bold text-amber-300 tracking-widest drop-shadow-md">
+      RITMO DE CHACARERA
+    </div>
+
+    <!-- Botón Gigante Invisible para Móvil (Mejor UX que un botón chiquito) -->
+    <div id="touch-area"
+      class="md:hidden fixed inset-x-0 bottom-0 h-1/3 z-40 bg-gradient-to-t from-amber-900/30 to-transparent flex items-end justify-center pb-6">
+      <span class="text-amber-200/50 font-bold animate-pulse text-sm">TOCA AQUÍ (BOMBO)</span>
+    </div>
+
+    <!-- Modal Victoria -->
     <div id="victory-modal"
-      style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center;">
+      style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); z-index: 10000; align-items: center; justify-content: center;">
       <div
-        style="background: linear-gradient(to bottom, #f59e0b, #9a3412); border: 4px solid #fcd34d; border-radius: 20px; padding: 30px; text-align: center; width: 260px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-        <div style="font-size: 50px; margin-bottom: 10px;">
-          🥁
+        class="bg-slate-800 border-2 border-amber-400 rounded-2xl p-8 text-center max-w-xs shadow-2xl relative overflow-hidden">
+        <!-- Brillo de fondo -->
+        <div class="absolute inset-0 bg-amber-500/10"></div>
+
+        <div class="relative z-10">
+          <div class="text-6xl mb-4 animate-bounce">🥁</div>
+          <h2 class="text-2xl font-black text-amber-400 mb-2 uppercase tracking-wider">¡Excelente!</h2>
+          <p class="text-slate-300 mb-6 text-sm leading-relaxed">El ritmo de la tierra fluye en tus manos. Has
+            completado la lección.</p>
+          <button id="continue-btn"
+            class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl shadow-lg transition-all border-b-4 border-emerald-800 active:border-b-0 active:translate-y-1">
+            CONTINUAR ➡️
+          </button>
         </div>
-        <h2 style="font-size: 22px; font-weight: bold; color: white; margin-bottom: 10px;">¡MUY BIEN!</h2>
-        <p style="color: #fef3c7; margin-bottom: 20px; font-size: 14px;">Has dominado la base de la Chacarera.</p>
-        <button id="continue-btn"
-          style="background: #16a34a; color: white; font-weight: bold; padding: 12px 0; width: 100%; border-radius: 10px; border: none; cursor: pointer; font-size: 16px;">FINALIZAR
-          ➡️</button>
       </div>
     </div>
+
   </div>
+
   <script>
-    let isPlaying = false, score = 0, measureCount = 0, currentBeat = 0, tempo = 110;
-    let audioCtx = null, lastBeatTime = 0, userHits = [false, false, false];
-    let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    // --- LÓGICA DE SISTEMAS ---
+    let isPlaying = false;
+    let score = 0;
+    let measureCount = 0;
+    let currentBeat = 0;
+    let tempo = 105;
+    let audioCtx = null;
+    let lastBeatTime = 0;
+    let userHits = [false, false, false];
+    let audioUnlocked = false; // Flag para móviles
 
-    const touchBtn = document.getElementById('touch-btn');
-
-    // Mostrar botón táctil en móvil
-    if (isMobile) {
-      touchBtn.style.display = 'block';
+    // Inicializador de Audio Robusto (Mobile Friendly)
+    function unlockAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      audioUnlocked = true;
     }
 
-    function initAudio() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-
-    // Sonido del metrónomo (click)
-    function playMetronomeClick(isFirstBeat) {
+    // Sintetizador Simple (Sin cargar archivos para velocidad)
+    function playSound(type) {
       if (!audioCtx) return;
+
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(isFirstBeat ? 1000 : 500, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+
+      if (type === 'click') { // Metrónomo
+        osc.frequency.setValueAtTime(currentBeat === 0 ? 1000 : 600, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+      } else { // Bombo
+        osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+      }
+
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       osc.start();
-      osc.stop(audioCtx.currentTime + 0.05);
+      osc.stop(audioCtx.currentTime + 0.25);
     }
 
-    // Sonido del bombo del usuario
-    function playDrumSound() {
-      if (!audioCtx) return;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.15);
-
-      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      osc.start(audioCtx.currentTime);
-      osc.stop(audioCtx.currentTime + 0.15);
-    }
-
+    // Bucle del Juego
     function runLoop() {
       if (!isPlaying) return;
-      lastBeatTime = Date.now();
-      playMetronomeClick(currentBeat === 0);
 
+      lastBeatTime = Date.now();
+      playSound('click'); // Sonido automático de guía
+
+      // Visuales
       const positions = [16, 50, 83];
       const indicator = document.getElementById('beat-indicator');
       indicator.style.left = positions[currentBeat] + "%";
       indicator.style.opacity = 1;
 
-      document.querySelectorAll('#notes-container > div').forEach((div, i) => {
-        div.style.opacity = (i === currentBeat) ? "1" : "0.4";
-      });
+      // Resaltar nota activa
+      for (let i = 0; i < 3; i++) {
+        const slot = document.getElementById(`slot-${i}`);
+        if (i === currentBeat) {
+          slot.style.opacity = "1";
+          slot.style.transform = "scale(1.1)";
+        } else {
+          slot.style.opacity = "0.4";
+          slot.style.transform = "scale(1)";
+        }
+      }
 
       setTimeout(() => {
         if (!isPlaying) return;
@@ -210,68 +265,100 @@
       }, 60000 / tempo);
     }
 
-    function handleInput() {
+    // Manejo de Input (Unificado para Teclado y Touch)
+    function handleInput(e) {
       if (!isPlaying) return;
-      initAudio();
-      playDrumSound();
+      if (e.type === 'keydown' && e.code !== 'Space') return;
+      if (e.type === 'keydown') e.preventDefault(); // Evitar scroll con espacio
 
+      // Desbloquear audio si es la primera vez en móvil
+      if (!audioUnlocked) unlockAudio();
+
+      // Calcular precisión
       const diff = Math.abs(Date.now() - lastBeatTime);
-      const tolerance = (60000 / tempo) * 0.4;
+      const tolerance = (60000 / tempo) * 0.45; // Tolerancia amplia
 
       if (diff < tolerance) {
+        // Lógica de Chacarera: Silencio (0) - Golpe (1) - Golpe (2)
         if (currentBeat === 0) {
-          document.getElementById('feedback').textContent = "¡ESPERA! ✋";
+          // Error: Tocó en el silencio
+          feedback("¡ESPERA! ✋", "#ef4444");
         } else if (!userHits[currentBeat]) {
+          // Acierto
           userHits[currentBeat] = true;
           score += 50;
           document.getElementById('score').textContent = score;
-          document.getElementById('feedback').textContent = "¡BOMBO! 🥁";
+          feedback("¡BIEN! 🥁", "#fbbf24");
+          playSound('drum');
+
+          // Animación de la nota
           const head = document.querySelector(`#slot-${currentBeat} .head`);
-          head.classList.add('hit-animation');
-          setTimeout(() => head.classList.remove('hit-animation'), 200);
+          if (head) {
+            head.classList.add('hit-animation');
+            setTimeout(() => head.classList.remove('hit-animation'), 200);
+          }
         }
       }
     }
 
+    function feedback(text, color) {
+      const el = document.getElementById('feedback');
+      el.textContent = text;
+      el.style.color = color;
+      el.style.transform = "scale(1.2)";
+      setTimeout(() => el.style.transform = "scale(1)", 100);
+    }
+
     function evaluarCompas() {
+      // Para ganar el compás: Tiempos 1 y 2 deben estar golpeados.
       if (userHits[1] && userHits[2]) {
         measureCount++;
         document.getElementById('measure-count').textContent = measureCount;
+
+        // Dificultad progresiva: Acelerar un poquito
+        if (measureCount === 4) tempo += 5;
+
         if (measureCount >= 8) {
-          isPlaying = false;
-          document.getElementById('victory-modal').style.display = 'flex';
+          finishGame();
         }
       }
       userHits = [false, false, false];
     }
 
-    document.getElementById('start-btn').onclick = () => {
-      initAudio();
-      if (isPlaying) { location.reload(); }
-      else {
+    function finishGame() {
+      isPlaying = false;
+      document.getElementById('victory-modal').style.display = 'flex';
+    }
+
+    // --- EVENTOS ---
+
+    // Iniciar
+    document.getElementById('start-btn').addEventListener('click', (e) => {
+      unlockAudio(); // Clave para iOS/Android
+      if (isPlaying) {
+        location.reload();
+      } else {
         isPlaying = true;
-        document.getElementById('start-btn').textContent = "REINICIAR";
+        e.target.textContent = "REINICIAR";
+        e.target.classList.remove('from-emerald-600', 'to-green-600');
+        e.target.classList.add('bg-slate-700');
         runLoop();
       }
-    };
-
-    // Evento para teclado
-    window.addEventListener('keydown', (e) => {
-      if (e.code === 'Space') {
-        e.preventDefault();
-        handleInput();
-      }
     });
 
-    // Evento para botón táctil
-    touchBtn.addEventListener('click', handleInput);
-    touchBtn.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      handleInput();
-    });
+    // Inputs
+    window.addEventListener('keydown', handleInput);
 
+    // Botón Táctil (Zona inferior de la pantalla)
+    const touchArea = document.getElementById('touch-area');
+    touchArea.addEventListener('touchstart', (e) => {
+      e.preventDefault(); // Evitar zoom o scroll
+      handleInput(e);
+    }, { passive: false });
+
+    // Salida
     document.getElementById('btn-cancelar').onclick = () => {
-      if (confirm("¿Salir de la clase?")) {
+      if (confirm("¿Salir de la práctica?")) {
         if (window.parent) window.parent.postMessage({ tipo: "CANCELAR_DESAFIO" }, "*");
       }
     };
@@ -282,7 +369,6 @@
       }
     };
   </script>
-  <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9cdd5e5be741ee13',t:'MTc3MTA4MDUyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
 </body>
 
 </html>
