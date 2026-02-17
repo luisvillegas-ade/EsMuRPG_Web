@@ -1,8 +1,15 @@
 [
 null,
+<<<<<<< HEAD
 null,
 {"id":2,"expanded":true,"name":"Habitación Inicial","order":3,"parentId":3,"scrollX":1350.5454545454545,"scrollY":846.5454545454546},
 {"id":3,"expanded":true,"name":"Mapa del Norte","order":1,"parentId":0,"scrollX":1350.5454545454545,"scrollY":890.1818181818182},
 {"id":4,"expanded":true,"name":"Patio de tierra","order":4,"parentId":3,"scrollX":1350.5454545454545,"scrollY":846.5454545454546},
 {"id":5,"expanded":false,"name":"La Puna","order":2,"parentId":3,"scrollX":1368,"scrollY":1902.5454545454547}
+=======
+{"id":1,"expanded":true,"name":"MAP001","order":2,"parentId":0,"scrollX":928.5,"scrollY":594},
+{"id":2,"expanded":true,"name":"Habitación Inicial","order":3,"parentId":1,"scrollX":928.5,"scrollY":582},
+{"id":3,"expanded":false,"name":"Mapa del Norte","order":1,"parentId":0,"scrollX":1842,"scrollY":2154},
+{"id":4,"expanded":true,"name":"Patio de tierra","order":4,"parentId":1,"scrollX":940.5,"scrollY":606}
+>>>>>>> 706bc63ca312f2b950f3a826115f159527220721
 ]
