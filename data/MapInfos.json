@@ -1,9 +1,8 @@
 [
 null,
-{"id":1,"expanded":true,"name":"MAP001","order":1,"parentId":0,"scrollX":411.55555555555554,"scrollY":320.8888888888889},
-{"id":2,"expanded":true,"name":"Habitación Inicial","order":3,"parentId":3,"scrollX":483,"scrollY":396},
-{"id":3,"expanded":true,"name":"Patio de la Academia","order":2,"parentId":1,"scrollX":0,"scrollY":0},
-{"id":4,"expanded":false,"name":"Parque","order":4,"parentId":3,"scrollX":412.6666666666667,"scrollY":445.3333333333333},
-{"id":5,"expanded":true,"name":"Casa 1","order":5,"parentId":3,"scrollX":535.6363636363636,"scrollY":301.0909090909091},
-{"id":6,"expanded":false,"name":"Escenario","order":6,"parentId":5,"scrollX":535.6363636363636,"scrollY":388.3636363636364}
+null,
+{"id":2,"expanded":true,"name":"Habitación Inicial","order":3,"parentId":3,"scrollX":1350.5454545454545,"scrollY":846.5454545454546},
+{"id":3,"expanded":true,"name":"Mapa del Norte","order":1,"parentId":0,"scrollX":1350.5454545454545,"scrollY":890.1818181818182},
+{"id":4,"expanded":true,"name":"Patio de tierra","order":4,"parentId":3,"scrollX":1350.5454545454545,"scrollY":846.5454545454546},
+{"id":5,"expanded":false,"name":"La Puna","order":2,"parentId":3,"scrollX":1368,"scrollY":1902.5454545454547}
 ]
