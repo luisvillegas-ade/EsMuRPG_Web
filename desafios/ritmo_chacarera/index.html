@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="es" class="h-full">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,64 +8,97 @@
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap');
-    * { font-family: 'Fredoka', sans-serif; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
-    
-    body { 
-      background-color: #1a120b; /* Marrón oscuro tierra */
-      color: #fcd34d; 
-      margin: 0; 
-      overflow: hidden; 
-      height: 100vh; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
+
+    * {
+      font-family: 'Fredoka', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
     }
 
-    .staff-line { background: #78350f; height: 3px; }
-    
-    .beat-indicator { 
-      transition: left 0.1s linear; 
-      box-shadow: 0 0 15px #f59e0b;
-      width: 4px; border-radius: 4px; background: white;
+    body {
+      background-color: #1a120b;
+      /* Marrón oscuro tierra */
+      color: #fcd34d;
+      margin: 0;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    
-    .hit-animation { animation: boom 0.2s ease-out; }
-    @keyframes boom { 
-      0% { transform: scale(1); filter: brightness(2); } 
-      50% { transform: scale(1.4); } 
-      100% { transform: scale(1); } 
+
+    .staff-line {
+      background: #78350f;
+      height: 3px;
+    }
+
+    .beat-indicator {
+      transition: left 0.1s linear;
+      box-shadow: 0 0 15px #f59e0b;
+      width: 4px;
+      border-radius: 4px;
+      background: white;
+    }
+
+    .hit-animation {
+      animation: boom 0.2s ease-out;
+    }
+
+    @keyframes boom {
+      0% {
+        transform: scale(1);
+        filter: brightness(2);
+      }
+
+      50% {
+        transform: scale(1.4);
+      }
+
+      100% {
+        transform: scale(1);
+      }
     }
 
     /* ESTILO DEL BOTÓN MÓVIL */
     #mobile-controls {
-        display: none; /* Se activa con JS si es móvil */
-        position: fixed;
-        bottom: 20px;
-        left: 0;
-        width: 100%;
-        justify-content: center;
-        z-index: 100;
+      display: none;
+      /* Se activa con JS si es móvil */
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      justify-content: center;
+      z-index: 100;
     }
-    
+
     #btn-hit {
-        background: linear-gradient(to bottom, #f59e0b, #d97706);
-        border: 4px solid #fffbeb;
-        color: white;
-        font-size: 24px;
-        font-weight: 900;
-        padding: 20px 60px;
-        border-radius: 50px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        text-shadow: 0 2px 2px rgba(0,0,0,0.3);
+      background: linear-gradient(to bottom, #f59e0b, #d97706);
+      border: 4px solid #fffbeb;
+      color: white;
+      font-size: 24px;
+      font-weight: 900;
+      padding: 20px 60px;
+      border-radius: 50px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
     }
-    #btn-hit:active { transform: scale(0.95); box-shadow: 0 5px 10px rgba(0,0,0,0.5); }
+
+    #btn-hit:active {
+      transform: scale(0.95);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    }
   </style>
 </head>
+
 <body>
 
-  <div id="app-container" class="w-full max-w-2xl bg-orange-950/90 rounded-3xl border-4 border-orange-600 shadow-2xl p-6 relative flex flex-col justify-between" style="height: 80vh; max-height: 500px;">
-    
-    <button id="btn-cancelar" class="absolute -top-4 -right-4 bg-red-600 hover:bg-red-500 text-white w-12 h-12 rounded-full font-bold shadow-lg border-2 border-white z-50 text-xl">X</button>
+  <div id="app-container"
+    class="w-full max-w-2xl bg-orange-950/90 rounded-3xl border-4 border-orange-600 shadow-2xl p-6 relative flex flex-col justify-between"
+    style="height: 80vh; max-height: 500px;">
+
+    <button id="btn-cancelar"
+      class="absolute -top-4 -right-4 bg-red-600 hover:bg-red-500 text-white w-12 h-12 rounded-full font-bold shadow-lg border-2 border-white z-50 text-xl">X</button>
 
     <!-- Header -->
     <div class="flex justify-between items-center mb-2">
@@ -78,13 +112,15 @@
           <span class="text-xl font-bold"><span id="measure-count">0</span><span class="text-xs">/8</span></span>
         </div>
       </div>
-      <button id="start-btn" class="bg-green-600 text-white font-bold py-2 px-6 rounded-xl shadow-lg border-b-4 border-green-800 active:border-b-0 active:translate-y-1 transition-all">
+      <button id="start-btn"
+        class="bg-green-600 text-white font-bold py-2 px-6 rounded-xl shadow-lg border-b-4 border-green-800 active:border-b-0 active:translate-y-1 transition-all">
         ▶️ TOCAR
       </button>
     </div>
 
     <!-- Pentagrama -->
-    <div class="relative bg-orange-100/10 rounded-2xl p-4 border-2 border-orange-500/30 flex-grow flex items-center justify-center">
+    <div
+      class="relative bg-orange-100/10 rounded-2xl p-4 border-2 border-orange-500/30 flex-grow flex items-center justify-center">
       <div class="flex items-center w-full relative">
         <div class="flex flex-col items-center justify-center mr-6 font-black text-4xl text-orange-400 leading-none">
           <span>3</span><span class="border-t-4 border-orange-400 w-full my-1 rounded"></span><span>4</span>
@@ -95,7 +131,7 @@
           <div class="absolute w-full top-12 staff-line"></div>
           <div class="absolute w-full top-20 staff-line"></div>
           <div class="absolute w-full top-28 staff-line"></div>
-          
+
           <div id="notes-container" class="absolute inset-0 flex justify-around items-center w-full">
             <!-- T1: Silencio -->
             <div class="flex flex-col items-center opacity-50" id="slot-0">
@@ -105,16 +141,16 @@
             <!-- T2: Golpe -->
             <div class="flex flex-col items-center" id="slot-1">
               <div class="relative">
-                  <div class="w-1.5 h-16 bg-orange-500 absolute left-3 -top-12"></div>
-                  <div class="w-8 h-6 bg-orange-500 rounded-[50%] -rotate-12 head shadow-[0_0_10px_orange]"></div>
+                <div class="w-1.5 h-16 bg-orange-500 absolute left-3 -top-12"></div>
+                <div class="w-8 h-6 bg-orange-500 rounded-[50%] -rotate-12 head shadow-[0_0_10px_orange]"></div>
               </div>
               <span class="text-[10px] font-bold mt-2 text-orange-400">GOLPE</span>
             </div>
             <!-- T3: Golpe -->
             <div class="flex flex-col items-center" id="slot-2">
               <div class="relative">
-                  <div class="w-1.5 h-16 bg-orange-500 absolute left-3 -top-12"></div>
-                  <div class="w-8 h-6 bg-orange-500 rounded-[50%] -rotate-12 head shadow-[0_0_10px_orange]"></div>
+                <div class="w-1.5 h-16 bg-orange-500 absolute left-3 -top-12"></div>
+                <div class="w-8 h-6 bg-orange-500 rounded-[50%] -rotate-12 head shadow-[0_0_10px_orange]"></div>
               </div>
               <span class="text-[10px] font-bold mt-2 text-orange-400">GOLPE</span>
             </div>
@@ -131,16 +167,18 @@
 
     <!-- BOTÓN MÓVIL -->
     <div id="mobile-controls">
-        <button id="btn-hit">🥁 GOLPE</button>
+      <button id="btn-hit">🥁 GOLPE</button>
     </div>
 
     <!-- Modal Victoria -->
-    <div id="victory-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center;">
+    <div id="victory-modal"
+      style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center;">
       <div class="bg-orange-950 border-4 border-orange-400 p-8 rounded-3xl text-center max-w-xs">
         <div class="text-6xl mb-4">⭐</div>
         <h2 class="text-2xl font-bold text-white mb-2">¡MUY BIEN!</h2>
         <p class="text-orange-200 mb-6">Has completado la base.</p>
-        <button id="continue-btn" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl text-lg">FINALIZAR ➡️</button>
+        <button id="continue-btn" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl text-lg">FINALIZAR
+          ➡️</button>
       </div>
     </div>
 
@@ -149,17 +187,17 @@
   <script>
     let isPlaying = false, score = 0, measureCount = 0, currentBeat = 0, tempo = 105;
     let audioCtx = null, lastBeatTime = 0, userHits = [false, false, false];
-    
+
     // DETECTAR MÓVIL Y MOSTRAR BOTÓN
     if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        document.getElementById('mobile-controls').style.display = 'flex';
+      document.getElementById('mobile-controls').style.display = 'flex';
     }
 
     function initAudio() {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
     }
-    
+
     function playBombo() {
       if (!audioCtx) return;
       const osc = audioCtx.createOscillator();
@@ -191,15 +229,15 @@
       document.getElementById('beat-indicator').style.left = positions[currentBeat] + "%";
       document.getElementById('beat-indicator').style.opacity = 1;
 
-      for(let i=0; i<3; i++) {
-          const slot = document.getElementById(`slot-${i}`);
-          slot.style.opacity = (i === currentBeat) ? "1" : "0.4";
-          slot.style.transform = (i === currentBeat) ? "scale(1.1)" : "scale(1)";
+      for (let i = 0; i < 3; i++) {
+        const slot = document.getElementById(`slot-${i}`);
+        slot.style.opacity = (i === currentBeat) ? "1" : "0.4";
+        slot.style.transform = (i === currentBeat) ? "scale(1.1)" : "scale(1)";
       }
 
       setTimeout(() => {
         if (!isPlaying) return;
-        if (currentBeat === 2) { evaluarCompas(); currentBeat = 0; } 
+        if (currentBeat === 2) { evaluarCompas(); currentBeat = 0; }
         else { currentBeat++; }
         runLoop();
       }, 60000 / tempo);
@@ -209,7 +247,7 @@
       if (!isPlaying) return;
       if (e.type === 'keydown' && e.code !== 'Space') return;
       if (e.type === 'keydown') e.preventDefault();
-      
+
       initAudio(); // Importante para móvil
 
       const diff = Math.abs(Date.now() - lastBeatTime);
@@ -217,19 +255,19 @@
 
       if (diff < tolerance) {
         if (currentBeat === 0) {
-           document.getElementById('feedback').textContent = "¡ESPERA! ✋";
-           document.getElementById('feedback').style.color = "#ef4444";
+          document.getElementById('feedback').textContent = "¡ESPERA! ✋";
+          document.getElementById('feedback').style.color = "#ef4444";
         } else if (!userHits[currentBeat]) {
-           userHits[currentBeat] = true;
-           playBombo();
-           score += 50;
-           document.getElementById('score').textContent = score;
-           document.getElementById('feedback').textContent = "¡BOMBO! 🥁";
-           document.getElementById('feedback').style.color = "#fcd34d";
-           
-           const head = document.querySelector(`#slot-${currentBeat} .head`);
-           head.classList.add('hit-animation');
-           setTimeout(() => head.classList.remove('hit-animation'), 200);
+          userHits[currentBeat] = true;
+          playBombo();
+          score += 50;
+          document.getElementById('score').textContent = score;
+          document.getElementById('feedback').textContent = "¡BOMBO! 🥁";
+          document.getElementById('feedback').style.color = "#fcd34d";
+
+          const head = document.querySelector(`#slot-${currentBeat} .head`);
+          head.classList.add('hit-animation');
+          setTimeout(() => head.classList.remove('hit-animation'), 200);
         }
       }
     }
@@ -249,37 +287,38 @@
     document.getElementById('start-btn').onclick = (e) => {
       initAudio();
       if (isPlaying) { location.reload(); }
-      else { 
-        isPlaying = true; 
+      else {
+        isPlaying = true;
         e.target.textContent = "REINICIAR";
         e.target.classList.replace('bg-green-600', 'bg-slate-600');
-        runLoop(); 
+        runLoop();
       }
     };
 
     // Eventos
     window.addEventListener('keydown', handleInput);
-    
+
     // Botón Táctil
     const btnHit = document.getElementById('btn-hit');
     btnHit.addEventListener('touchstart', (e) => {
-        e.preventDefault(); 
-        handleInput(e);
-        btnHit.style.transform = "scale(0.9)";
-        setTimeout(() => btnHit.style.transform = "scale(1)", 100);
-    }, {passive: false});
+      e.preventDefault();
+      handleInput(e);
+      btnHit.style.transform = "scale(0.9)";
+      setTimeout(() => btnHit.style.transform = "scale(1)", 100);
+    }, { passive: false });
 
     document.getElementById('btn-cancelar').onclick = () => {
-       if(confirm("¿Salir?")) {
-          if (window.parent) window.parent.postMessage({ tipo: "CANCELAR_DESAFIO" }, "*");
-       }
+      if (confirm("¿Salir?")) {
+        if (window.parent) window.parent.postMessage({ tipo: "CANCELAR_DESAFIO" }, "*");
+      }
     };
 
     document.getElementById('continue-btn').onclick = () => {
       if (window.parent) {
-         window.parent.postMessage({ tipo: "FIN_DESAFIO", puntaje: score, id: "chacarera" }, "*");
+        window.parent.postMessage({ tipo: "FIN_DESAFIO", puntaje: score, id: "chacarera" }, "*");
       }
     };
   </script>
 </body>
+
 </html>
