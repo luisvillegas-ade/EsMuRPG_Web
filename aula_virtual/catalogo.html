@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAAMUS - Catálogo de Módulos</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        saamus: {
+                            bg: '#0d1117',
+                            card: '#161b22',
+                            border: '#30363d',
+                            text: '#c9d1d9',
+                            amber: '#fbbf24',
+                            terracotta: '#ea580c'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons (Phosphor Icons) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0d1117;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #30363d;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #58a6ff;
+        }
+
+        /* Animation for selection */
+        @keyframes pulse-select {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .animate-select {
+            animation: pulse-select 0.3s ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="bg-saamus-bg text-saamus-text min-h-screen flex flex-col pb-24"> <!-- pb-24 to prevent footer overlap -->
+
+    <!-- Header -->
+    <header
+        class="h-16 bg-saamus-card border-b border-saamus-border shadow-sm flex items-center justify-between px-4 lg:px-8 sticky top-0 z-30">
+        <div class="flex items-center gap-4">
+            <a href="dashboard.html"
+                class="flex items-center gap-2 text-white font-bold text-xl tracking-wider hover:text-saamus-amber transition-colors">
+                <i class="ph ph-music-notes text-saamus-amber text-2xl"></i> SAAMUS
+            </a>
+        </div>
+
+        <nav class="flex items-center gap-4">
+            <a href="dashboard.html"
+                class="hidden sm:flex items-center gap-2 text-gray-400 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-saamus-border/50">
+                <i class="ph ph-house text-lg"></i>
+                <span class="font-medium">Dashboard</span>
+            </a>
+
+            <div class="flex items-center gap-3 border-l border-saamus-border pl-4">
+                <div
+                    class="h-9 w-9 rounded-full bg-gradient-to-br from-saamus-terracotta to-purple-600 flex items-center justify-center text-white font-bold border border-saamus-border shadow-inner cursor-pointer">
+                    LV
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+
+        <!-- Page Title & Filters -->
+        <div class="mb-8 space-y-6">
+            <div class="text-center sm:text-left">
+                <h1 class="text-3xl font-bold text-white mb-2">Selección a la Carta</h1>
+                <p class="text-gray-400">Arma tu propio camino de aprendizaje. Elige los módulos que más te interesen.
+                </p>
+            </div>
+
+            <!-- Search & Filter Bar -->
+            <div
+                class="flex flex-col md:flex-row gap-4 bg-saamus-card p-4 rounded-xl border border-saamus-border shadow-sm">
+                <!-- Search Input -->
+                <div class="flex-1 relative">
+                    <i
+                        class="ph ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg"></i>
+                    <input type="text" placeholder="Buscar módulos, temas o profesores..."
+                        class="w-full bg-saamus-bg border border-saamus-border text-white text-sm rounded-lg pl-10 pr-4 py-2.5 focus:outline-none focus:border-saamus-amber focus:ring-1 focus:ring-saamus-amber transition-colors placeholder-gray-600">
+                </div>
+
+                <!-- Category Filters (Pills) -->
+                <div class="flex flex-wrap gap-2 items-center justify-center md:justify-end">
+                    <button
+                        class="px-4 py-2 rounded-full text-xs font-semibold bg-saamus-amber text-black hover:bg-yellow-400 transition-colors shadow-lg shadow-yellow-500/20">
+                        Todos
+                    </button>
+                    <button
+                        class="px-4 py-2 rounded-full text-xs font-semibold bg-saamus-bg border border-saamus-border text-gray-400 hover:text-white hover:border-gray-500 transition-colors">
+                        Percusión
+                    </button>
+                    <button
+                        class="px-4 py-2 rounded-full text-xs font-semibold bg-saamus-bg border border-saamus-border text-gray-400 hover:text-white hover:border-gray-500 transition-colors">
+                        Cuerdas
+                    </button>
+                    <button
+                        class="px-4 py-2 rounded-full text-xs font-semibold bg-saamus-bg border border-saamus-border text-gray-400 hover:text-white hover:border-gray-500 transition-colors">
+                        Teoría
+                    </button>
+                    <button
+                        class="px-4 py-2 rounded-full text-xs font-semibold bg-saamus-bg border border-saamus-border text-saamus-terracotta border-saamus-terracotta/30 hover:bg-saamus-terracotta hover:text-white transition-colors">
+                        <i class="ph ph-game-controller mr-1"></i> RPG
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="module-grid">
+
+            <!-- Card 1: Fundamentos del Ritmo -->
+            <div class="module-card group bg-saamus-card border border-saamus-border rounded-xl overflow-hidden hover:border-gray-600 hover:shadow-xl transition-all duration-300 flex flex-col h-full relative"
+                data-id="1">
+                <!-- Image/Cover Placeholder -->
+                <div
+                    class="h-40 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center relative overflow-hidden">
+                    <i
+                        class="ph ph-metronome text-6xl text-gray-700 group-hover:text-gray-600 transition-colors transform group-hover:scale-110 duration-500"></i>
+                    <div
+                        class="absolute top-3 left-3 bg-blue-900/80 text-blue-200 text-[10px] font-bold px-2 py-1 rounded backdrop-blur-sm border border-blue-700/50">
+                        TEORÍA
+                    </div>
+                </div>
+
+                <div class="p-5 flex-1 flex flex-col">
+                    <h3
+                        class="text-lg font-bold text-white mb-2 leading-tight group-hover:text-saamus-amber transition-colors">
+                        Fundamentos del Ritmo</h3>
+                    <p class="text-sm text-gray-400 mb-4 flex-1">
+                        Domina el pulso, el tempo y las figuras rítmicas esenciales para cualquier instrumentista.
+                    </p>
+
+                    <div class="flex items-center gap-4 text-xs text-gray-500 mb-4 border-t border-saamus-border pt-3">
+                        <span class="flex items-center gap-1"><i class="ph ph-clock"></i> 4 Semanas</span>
+                        <span class="flex items-center gap-1"><i class="ph ph-users"></i> 120 Est.</span>
+                    </div>
+
+                    <!-- Action Button -->
+                    <button
+                        class="select-btn w-full py-2.5 rounded-lg border-2 font-semibold transition-all duration-200 flex items-center justify-center gap-2 group-active:scale-95"
+                        onclick="toggleSelection(this)">
+                        <i class="ph ph-plus text-lg icon-state"></i>
+                        <span class="text-state">Seleccionar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 2: El Bombo Legüero -->
+            <div class="module-card group bg-saamus-card border border-saamus-border rounded-xl overflow-hidden hover:border-gray-600 hover:shadow-xl transition-all duration-300 flex flex-col h-full relative"
+                data-id="2">
+                <div
+                    class="h-40 bg-gradient-to-br from-orange-900/40 to-amber-900/20 flex items-center justify-center relative overflow-hidden">
+                    <i
+                        class="ph ph-music-notes-simple text-6xl text-amber-900/60 group-hover:text-amber-800/60 transition-colors transform group-hover:scale-110 duration-500"></i>
+                    <div
+                        class="absolute top-3 left-3 bg-amber-900/80 text-amber-200 text-[10px] font-bold px-2 py-1 rounded backdrop-blur-sm border border-amber-700/50">
+                        PRÁCTICA
+                    </div>
+                </div>
+
+                <div class="p-5 flex-1 flex flex-col">
+                    <h3
+                        class="text-lg font-bold text-white mb-2 leading-tight group-hover:text-saamus-amber transition-colors">
+                        El Bombo Legüero</h3>
+                    <p class="text-sm text-gray-400 mb-4 flex-1">
+                        Técnicas de golpe, repiques y bases rítmicas tradicionales del folklore argentino.
+                    </p>
+
+                    <div class="flex items-center gap-4 text-xs text-gray-500 mb-4 border-t border-saamus-border pt-3">
+                        <span class="flex items-center gap-1"><i class="ph ph-clock"></i> 6 Semanas</span>
+                        <span class="flex items-center gap-1"><i class="ph ph-users"></i> 85 Est.</span>
+                    </div>
+
+                    <button
+                        class="select-btn w-full py-2.5 rounded-lg border-2 font-semibold transition-all duration-200 flex items-center justify-center gap-2 group-active:scale-95"
+                        onclick="toggleSelection(this)">
+                        <i class="ph ph-plus text-lg icon-state"></i>
+                        <span class="text-state">Seleccionar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 3: RPG Adventure -->
+            <div class="module-card group bg-saamus-card border-2 border-saamus-terracotta/30 rounded-xl overflow-hidden hover:border-saamus-terracotta hover:shadow-[0_0_20px_rgba(234,88,12,0.15)] transition-all duration-300 flex flex-col h-full relative"
+                data-id="3">
+                <div
+                    class="h-40 bg-gradient-to-br from-saamus-terracotta/20 to-saamus-bg flex items-center justify-center relative overflow-hidden border-b border-saamus-terracotta/20">
+                    <i
+                        class="ph ph-castle-turret text-6xl text-saamus-terracotta/60 group-hover:text-saamus-terracotta transition-colors transform group-hover:scale-110 duration-500 animate-pulse-slow"></i>
+                    <div
+                        class="absolute top-3 left-3 bg-saamus-terracotta text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg border border-orange-500">
+                        RPG EXCLUSIVO
+                    </div>
+                    <!-- Particle effect placeholder -->
+                    <div
+                        class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30">
+                    </div>
+                </div>
+
+                <div class="p-5 flex-1 flex flex-col relative">
+                    <!-- Glow effect -->
+                    <div
+                        class="absolute -top-10 left-0 w-full h-20 bg-gradient-to-b from-saamus-terracotta/10 to-transparent pointer-events-none">
+                    </div>
+
+                    <h3
+                        class="text-lg font-bold text-white mb-2 leading-tight group-hover:text-saamus-terracotta transition-colors">
+                        Aventura en el Patio de Tierra</h3>
+                    <p class="text-sm text-gray-400 mb-4 flex-1">
+                        ¡Aprende jugando! Resuelve desafíos rítmicos en un entorno RPG inmersivo y gana XP.
+                    </p>
+
+                    <div
+                        class="flex items-center gap-4 text-xs text-saamus-terracotta mb-4 border-t border-saamus-border pt-3 font-medium">
+                        <span class="flex items-center gap-1"><i class="ph ph-game-controller"></i> Interactivo</span>
+                        <span class="flex items-center gap-1"><i class="ph ph-trophy"></i> +500 XP</span>
+                    </div>
+
+                    <button
+                        class="select-btn w-full py-2.5 rounded-lg border-2 font-semibold transition-all duration-200 flex items-center justify-center gap-2 group-active:scale-95"
+                        onclick="toggleSelection(this)">
+                        <i class="ph ph-plus text-lg icon-state"></i>
+                        <span class="text-state">Seleccionar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 4: Lectura de Pentagrama -->
+            <div class="module-card group bg-saamus-card border border-saamus-border rounded-xl overflow-hidden hover:border-gray-600 hover:shadow-xl transition-all duration-300 flex flex-col h-full relative"
+                data-id="4">
+                <div
+                    class="h-40 bg-gradient-to-br from-purple-900/30 to-indigo-900/20 flex items-center justify-center relative overflow-hidden">
+                    <i
+                        class="ph ph-music-notes text-6xl text-indigo-800 group-hover:text-indigo-700 transition-colors transform group-hover:scale-110 duration-500"></i>
+                    <div
+                        class="absolute top-3 left-3 bg-indigo-900/80 text-indigo-200 text-[10px] font-bold px-2 py-1 rounded backdrop-blur-sm border border-indigo-700/50">
+                        TEORÍA
+                    </div>
+                </div>
+
+                <div class="p-5 flex-1 flex flex-col">
+                    <h3
+                        class="text-lg font-bold text-white mb-2 leading-tight group-hover:text-saamus-amber transition-colors">
+                        Lectura de Pentagrama</h3>
+                    <p class="text-sm text-gray-400 mb-4 flex-1">
+                        Aprende a leer y escribir música en clave de sol y fa. Ejercicios prácticos de solfeo.
+                    </p>
+
+                    <div class="flex items-center gap-4 text-xs text-gray-500 mb-4 border-t border-saamus-border pt-3">
+                        <span class="flex items-center gap-1"><i class="ph ph-clock"></i> 8 Semanas</span>
+                        <span class="flex items-center gap-1"><i class="ph ph-users"></i> 210 Est.</span>
+                    </div>
+
+                    <button
+                        class="select-btn w-full py-2.5 rounded-lg border-2 font-semibold transition-all duration-200 flex items-center justify-center gap-2 group-active:scale-95"
+                        onclick="toggleSelection(this)">
+                        <i class="ph ph-plus text-lg icon-state"></i>
+                        <span class="text-state">Seleccionar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Empty slots for grid alignment if needed -->
+
+        </div>
+    </main>
+
+    <!-- Sticky Footer (Enrollment) -->
+    <div class="fixed bottom-0 left-0 w-full bg-saamus-card border-t border-saamus-border shadow-[0_-5px_20px_rgba(0,0,0,0.5)] z-40 transform transition-transform duration-300 translate-y-full"
+        id="sticky-footer">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+
+            <div class="flex items-center gap-4">
+                <div
+                    class="h-10 w-10 bg-saamus-amber rounded-full flex items-center justify-center text-black font-bold text-lg shadow-lg">
+                    <span id="selected-count">0</span>
+                </div>
+                <div>
+                    <p class="text-white font-bold text-lg">Módulos Seleccionados</p>
+                    <p class="text-xs text-gray-400">Listo para comenzar tu aprendizaje</p>
+                </div>
+            </div>
+
+            <button
+                class="w-full sm:w-auto bg-saamus-terracotta hover:bg-orange-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-orange-900/50 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
+                <span>CONFIRMAR INSCRIPCIÓN</span>
+                <i class="ph ph-arrow-right font-bold"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Logic Script -->
+    <script>
+        let selectedModules = 0;
+        const footer = document.getElementById('sticky-footer');
+        const countSpan = document.getElementById('selected-count');
+
+        // Initial render of buttons
+        document.querySelectorAll('.select-btn').forEach(btn => updateButtonState(btn, false));
+
+        function toggleSelection(btn) {
+            const isSelected = btn.classList.contains('selected');
+
+            // Toggle state
+            if (isSelected) {
+                selectedModules--;
+                btn.classList.remove('selected');
+                updateButtonState(btn, false);
+            } else {
+                selectedModules++;
+                btn.classList.add('selected');
+                btn.classList.add('animate-select'); // trigger animation
+                setTimeout(() => btn.classList.remove('animate-select'), 300); // remove after animation
+                updateButtonState(btn, true);
+            }
+
+            // Update UI
+            countSpan.textContent = selectedModules;
+
+            // Toggle footer visibility
+            if (selectedModules > 0) {
+                footer.classList.remove('translate-y-full');
+            } else {
+                footer.classList.add('translate-y-full');
+            }
+        }
+
+        function updateButtonState(btn, selected) {
+            const icon = btn.querySelector('.icon-state');
+            const text = btn.querySelector('.text-state');
+
+            if (selected) {
+                // Selected Styles (Greenish/Active look)
+                btn.className = 'select-btn w-full py-2.5 rounded-lg border-2 font-semibold transition-all duration-200 flex items-center justify-center gap-2 group-active:scale-95 bg-green-900/30 border-green-500/50 text-green-400 selected';
+                icon.className = 'ph ph-check text-lg icon-state';
+                text.textContent = 'Seleccionado';
+            } else {
+                // Default Styles (Outline)
+                btn.className = 'select-btn w-full py-2.5 rounded-lg border-2 font-semibold transition-all duration-200 flex items-center justify-center gap-2 group-active:scale-95 border-saamus-border text-gray-400 hover:border-saamus-amber hover:text-saamus-amber bg-transparent';
+                icon.className = 'ph ph-plus text-lg icon-state';
+                text.textContent = 'Seleccionar';
+            }
+        }
+    </script>
+</body>
+
+</html>
