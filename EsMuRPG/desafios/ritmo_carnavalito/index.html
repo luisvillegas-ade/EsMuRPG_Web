@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academia Rítmica - Carnavalito</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+    * { font-family: 'Fredoka', sans-serif; }
+    .staff-line { background: #2d1b0e; height: 2px; }
+    .user-note { animation: popIn 0.1s ease-out; }
+    @keyframes popIn { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
+    
+    /* Indicador de pulso más visible */
+    #beat-indicator { transition: left 0.1s linear; }
+    
+    /* Estilos para agrupar visualmente las notas */
+    .rhythm-group {
+        border-right: 2px dashed rgba(59, 130, 246, 0.3);
+        padding-right: 4px;
+        margin-right: 4px;
+    }
+    .rhythm-group:last-child { border-right: none; }
+  </style>
+</head>
+<body class="h-full bg-slate-900 text-white overflow-hidden flex items-center justify-center p-2">
+
+  <div id="app-container" class="w-full max-w-5xl bg-slate-800 rounded-3xl shadow-2xl p-4 border-4 border-amber-400">
+    
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-2 gap-2">
+      <div class="flex gap-2">
+        <div class="bg-amber-500/20 rounded-xl px-3 py-1 border-2 border-amber-400">
+          <span class="text-amber-300 text-sm">Puntos:</span> <span id="score" class="font-bold text-xl">0</span>
+        </div>
+        <div class="bg-purple-500/20 rounded-xl px-3 py-1 border-2 border-purple-400">
+          <span class="text-purple-300 text-sm">Ciclos:</span> <span id="measure-count" class="font-bold text-xl">0</span>/4
+        </div>
+      </div>
+      <button id="start-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-xl shadow-lg transition-all">▶️ ¡Huancara!</button>
+    </div>
+
+    <!-- Instrucción Visual -->
+    <div class="text-center text-amber-200 text-sm mb-2 font-mono">
+       RITMO: TA (largo) - ti (corto) - ti (corto)
+    </div>
+
+    <!-- Pentagrama Guía (El Maestro) -->
+    <div class="relative bg-slate-700/50 rounded-2xl p-2 border-2 border-blue-400 mb-2 overflow-hidden">
+      <div class="flex items-center h-24">
+        <div class="text-4xl mr-2 text-blue-400">𝄞</div>
+        <div class="flex flex-col items-center mr-2 font-bold text-blue-400 text-xl leading-tight">
+          <span>4</span><span>4</span>
+        </div>
+        
+        <!-- Contenedor de notas y líneas -->
+        <div class="flex-1 relative h-full">
+          <!-- Líneas del pentagrama -->
+          <div class="absolute w-full top-[20%] staff-line"></div>
+          <div class="absolute w-full top-[35%] staff-line"></div>
+          <div class="absolute w-full top-[50%] staff-line"></div>
+          <div class="absolute w-full top-[65%] staff-line"></div>
+          <div class="absolute w-full top-[80%] staff-line"></div>
+          
+          <!-- Notas Guía (Generadas dinámicamente o estáticas) -->
+          <div id="reference-notes" class="absolute inset-0 flex justify-between items-center px-4 w-full">
+             <!-- Se llenará con JS para precisión -->
+          </div>
+
+          <!-- El Cursor Rojo -->
+          <div id="beat-indicator" class="absolute top-0 w-1 h-full bg-red-500 shadow-[0_0_10px_red] opacity-0 left-0"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pentagrama Usuario (Tu Bombo) -->
+    <div class="relative bg-slate-700/50 rounded-2xl p-2 border-2 border-purple-400 h-28">
+      <div class="flex items-center h-full">
+        <div class="text-4xl mr-2 text-purple-400">⚡</div>
+        <div class="flex-1 relative h-full">
+          <!-- Líneas fantasma -->
+          <div class="absolute w-full bg-purple-400/10 h-[1px] top-[20%]"></div>
+          <div class="absolute w-full bg-purple-400/10 h-[1px] top-[50%]"></div>
+          <div class="absolute w-full bg-purple-400/10 h-[1px] top-[80%]"></div>
+          
+          <div id="user-notes" class="absolute inset-0 flex justify-between items-center px-4 w-full">
+            <!-- Slots generados por JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="feedback" class="text-center mt-2 text-2xl font-bold h-8 text-amber-300 drop-shadow-md">Presiona ESPACIO</div>
+
+    <!-- Modal Victoria -->
+    <div id="victory-modal" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
+      <div class="bg-gradient-to-b from-amber-300 to-orange-500 p-8 rounded-3xl border-4 border-white text-center shadow-2xl max-w-sm mx-4">
+        <div class="text-6xl mb-4">🌵</div>
+        <h2 class="text-3xl font-bold text-amber-900 mb-2">¡Carnavalito Aprobado!</h2>
+        <p class="text-amber-800 font-semibold mb-6">El duende no pudo contigo.</p>
+        <button id="continue-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-xl w-full shadow-lg transform hover:scale-105 transition-all">
+          CONTINUAR ➡️
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // --- CONFIGURACIÓN DEL RITMO (La parte importante) ---
+    // Representamos: Corchea (0.5), Semi (0.25), Semi (0.25). 
+    // Repetido 4 veces = 1 compás de 4/4
+    const rhythmPattern = [
+      0.5, 0.25, 0.25,  // Grupo 1
+      0.5, 0.25, 0.25,  // Grupo 2
+      0.5, 0.25, 0.25,  // Grupo 3
+      0.5, 0.25, 0.25   // Grupo 4
+    ];
+    
+    const TOTAL_STEPS = rhythmPattern.length; // 12 notas
+    let tempo = 65; // BPM (Negra) - Ajustado para que sea jugable pero alegre
+
+    // --- Variables de Estado ---
+    let audioCtx = null;
+    let isPlaying = false;
+    let currentStep = 0;
+    let score = 0;
+    let measureCount = 0;
+    let lastNoteTime = 0;
+    let nextNoteTime = 0;
+    let userHits = new Array(TOTAL_STEPS).fill(false);
+    let animationId = null;
+
+    const startBtn = document.getElementById('start-btn');
+    const beatIndicator = document.getElementById('beat-indicator');
+    const userNotesContainer = document.getElementById('user-notes');
+    const refNotesContainer = document.getElementById('reference-notes');
+
+    // --- Inicialización Visual ---
+    function initVisuals() {
+        userNotesContainer.innerHTML = '';
+        refNotesContainer.innerHTML = '';
+        
+        // Generar 12 slots
+        for(let i=0; i<TOTAL_STEPS; i++) {
+            // Determinar si es inicio de grupo (0, 3, 6, 9)
+            const isGroupStart = i % 3 === 0;
+            const widthClass = isGroupStart ? 'w-8' : 'w-5'; // Visualmente la corchea es más ancha
+            
+            // Renderizar Notas Guía
+            let noteHTML = `
+                <div class="note flex flex-col items-center justify-center ${i % 3 === 2 ? 'mr-4 border-r-2 border-white/10 pr-2' : ''}" style="opacity: 0.7">
+                    <div class="${widthClass} h-8 ${isGroupStart ? 'bg-blue-400' : 'bg-blue-300'} rounded-sm mb-1"></div>
+                    <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                </div>`;
+            refNotesContainer.innerHTML += noteHTML;
+
+            // Renderizar Slots de Usuario
+            userNotesContainer.innerHTML += `
+                <div id="slot-${i}" class="flex flex-col items-center justify-center h-full ${i % 3 === 2 ? 'mr-4 pr-2' : ''} transition-all">
+                    <div class="w-6 h-6 rounded-full border-2 border-dashed border-purple-500/30 flex items-center justify-center text-xs text-slate-500">
+                       ${isGroupStart ? '●' : '•'}
+                    </div>
+                </div>`;
+        }
+    }
+
+    // --- Motor de Audio ---
+    function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    
+    function playTone(freq, type='sine') {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+    }
+
+    // --- Game Loop (Basado en Tiempo Real) ---
+    function startGame() {
+      initAudio();
+      if (isPlaying) return stopGame();
+      
+      isPlaying = true;
+      startBtn.textContent = "⏹ Detener";
+      startBtn.classList.replace('bg-green-500', 'bg-red-500');
+      beatIndicator.style.opacity = "1";
+      
+      currentStep = 0;
+      score = 0;
+      measureCount = 0;
+      document.getElementById('score').textContent = "0";
+      
+      nextNoteTime = audioCtx.currentTime + 0.5; // Empezar en 0.5s
+      scheduleNextNote();
+      requestAnimationFrame(updateVisuals);
+    }
+
+    function stopGame() {
+      isPlaying = false;
+      cancelAnimationFrame(animationId);
+      clearTimeout(timerID);
+      startBtn.textContent = "▶️ ¡Huancara!";
+      startBtn.classList.replace('bg-red-500', 'bg-green-500');
+      beatIndicator.style.opacity = "0";
+    }
+
+    let timerID;
+    
+    function scheduleNextNote() {
+        if (!isPlaying) return;
+
+        const durationInSeconds = (60 / tempo) * rhythmPattern[currentStep];
+        
+        // Programar sonido guía
+        // Acento en el primer golpe de cada grupo (Corchea)
+        const freq = (currentStep % 3 === 0) ? 500 : 350; // Agudo (Grave de Huancara) - Medio
+        
+        // Usamos oscillator 'triangle' para sonar más percusivo/folclórico
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, nextNoteTime);
+        gain.gain.setValueAtTime(0.15, nextNoteTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, nextNoteTime + 0.08);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(nextNoteTime);
+        osc.stop(nextNoteTime + 0.1);
+
+        // Definir ventana de tiempo para el input del usuario
+        lastNoteTime = nextNoteTime;
+        
+        // Avanzar lógica
+        nextNoteTime += durationInSeconds;
+        
+        // Timer para el siguiente paso lógico
+        timerID = setTimeout(() => {
+            if(!isPlaying) return;
+            
+            // Evaluar si falló la nota anterior (opcional, por ahora solo contamos aciertos)
+            
+            currentStep++;
+            if (currentStep >= TOTAL_STEPS) {
+                evaluarCompas();
+                currentStep = 0;
+            }
+            scheduleNextNote();
+        }, durationInSeconds * 1000);
+    }
+
+    function updateVisuals() {
+        if (!isPlaying) return;
+        
+        // Mover la barra roja
+        // Calculamos posición basada en el tiempo actual vs el tiempo de la nota
+        // Esto es una aproximación lineal para visualización fluida
+        const totalDuration = (60/tempo) * 4; // Duración total del compás
+        // ... Lógica simplificada: Mover indicador por slots
+        
+        // Truco visual: Mover el indicador al slot actual
+        const slot = document.getElementById(`slot-${currentStep}`);
+        if(slot) {
+            const rect = slot.getBoundingClientRect();
+            const containerRect = document.getElementById('app-container').getBoundingClientRect();
+            const relativeLeft = rect.left - containerRect.left + (rect.width/2);
+            beatIndicator.style.left = `${relativeLeft}px`;
+        }
+
+        animationId = requestAnimationFrame(updateVisuals);
+    }
+
+    // --- Input del Usuario ---
+    function handleInput() {
+      if (!isPlaying) return;
+      
+      const currentTime = audioCtx.currentTime;
+      const diff = Math.abs(currentTime - lastNoteTime);
+      
+      // Margen de error: más estricto para semicorcheas
+      const window = 0.15; // 150ms
+
+      if (diff < window && !userHits[currentStep]) {
+        userHits[currentStep] = true;
+        score += 50;
+        document.getElementById('score').textContent = score;
+        
+        // Feedback Visual
+        const slot = document.getElementById(`slot-${currentStep}`);
+        slot.innerHTML = `
+          <div class="user-note w-8 h-8 rounded-full bg-amber-400 flex items-center justify-center border-2 border-white shadow-lg">
+            🎵
+          </div>`;
+        
+        // Sonido de Bombo del Usuario
+        playTone(100, 'square'); // Sonido más grave y "sucio"
+        
+        document.getElementById('feedback').textContent = "¡BIEN!";
+        document.getElementById('feedback').className = "text-center mt-2 text-2xl font-bold h-8 text-green-400";
+      } else {
+         // Miss (opcional visual)
+      }
+    }
+
+    function evaluarCompas() {
+      const hits = userHits.filter(h => h).length;
+      // Exigencia: Acertar al menos 8 de las 12 notas
+      if (hits >= 8) { 
+        measureCount++;
+        document.getElementById('measure-count').textContent = measureCount;
+      }
+      
+      // Limpiar tablero
+      userHits.fill(false);
+      initVisuals(); // Redibuja los slots vacíos
+      
+      if (measureCount >= 4) {
+          stopGame();
+          document.getElementById('victory-modal').classList.remove('hidden');
+          document.getElementById('victory-modal').classList.add('flex');
+      }
+    }
+
+    // --- Event Listeners ---
+    window.addEventListener('keydown', (e) => { 
+        if(e.code === 'Space') { 
+            e.preventDefault(); 
+            handleInput(); 
+            // Efecto visual en botón
+            document.getElementById('feedback').style.transform = "scale(0.9)";
+            setTimeout(()=>document.getElementById('feedback').style.transform = "scale(1)", 100);
+        } 
+    });
+
+    document.getElementById('continue-btn').addEventListener('click', () => {
+      if (window.parent) window.parent.postMessage({ tipo: "FIN_DESAFIO", puntaje: score }, "*");
+    });
+
+    document.getElementById('btn-cancelar')?.addEventListener('click', function() {
+        if (confirm("¿El Carnavalito es muy rápido? ¿Querés salir?")) {
+            if (window.parent) window.parent.postMessage({ tipo: "CANCELAR_DESAFIO" }, "*");
+        }
+    });
+
+    startBtn.addEventListener('click', startGame);
+    
+    // Iniciar
+    initVisuals();
+  </script>
+  
+  <!-- Botón Salir -->
+  <button id="btn-cancelar" style="position: fixed; top: 10px; right: 10px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">✕</button>
+</body>
+</html>
