@@ -97,11 +97,10 @@
                 alert("Por favor, completa usuario y contraseña.");
                 return;
             }
-
-            btn.innerText = "Verificando...";
-            btn.disabled = true;
             // Guardamos la credencial del alumno en la sesión actual
             localStorage.setItem('saamus_usuario_email', email);
+            btn.innerText = "Verificando...";
+            btn.disabled = true;
             // Redirección al Servidor de Google (Validación)
             window.location.href = `${URL_APPS_SCRIPT}?email=${email}&pass=${pass}&dest=aula`;
         }
