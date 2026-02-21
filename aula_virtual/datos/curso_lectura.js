@@ -48,7 +48,7 @@ const datosCurso = {
                     "tipo": "pdf",
                     "titulo": "Resumen Visual: El Pulso de la Tierra",
                     "detalle": "Infografía • PDF • 5 min",
-                    "url": "contenidos/curso_01_lectura/modulo_01_pulso/resumen_modulo1.png",
+                    "url": "contenidos/curso_01_lectura/modulo_01_pulso/resumen_modulo1.pdf",
                     "completado": false
                 }
             ]
