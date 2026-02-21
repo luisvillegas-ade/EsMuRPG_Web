@@ -301,6 +301,26 @@
             });
         }
     </script>
+
+    <script>
+        // --- SISTEMA DE ANCLAJE DE SESIÓN ---
+        window.onload = function () {
+            const params = new URLSearchParams(window.location.search);
+            const emailDesdeURL = params.get('email');
+
+            if (emailDesdeURL) {
+                // Guardamos el mail en la memoria del navegador de forma persistente
+                localStorage.setItem('saamus_usuario_email', emailDesdeURL);
+                console.log("Sesión anclada para:", emailDesdeURL);
+            } else {
+                console.log("No se detectó email en la URL, buscando en memoria...");
+                const emailEnMemoria = localStorage.getItem('saamus_usuario_email');
+                if (!emailEnMemoria) {
+                    console.error("ALERTA: Usuario no identificado.");
+                }
+            }
+        };
+    </script>
 </body>
 
 </html>

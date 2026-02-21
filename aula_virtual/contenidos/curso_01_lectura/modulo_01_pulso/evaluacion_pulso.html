@@ -182,7 +182,7 @@
         const URL_API = "https://script.google.com/macros/s/AKfycbzsPf8M9GzkEPLtI2MtfbVWYaFl_E2UjAjAh-weOarVvQtAooqL6AQhaoLawSTYb4EUgA/exec";
 
         const urlParams = new URLSearchParams(window.location.search);
-        const emailAlumno = urlParams.get('email') || 'sin_email@error.com';
+        const emailAlumno = localStorage.getItem('saamus_usuario_email') || urlParams.get('email') || 'error_identidad@saamus.com';
         console.log("IDENTIDAD DETECTADA:", emailAlumno);
         async function guardarEnLaNube(email, actividad) {
             try {
