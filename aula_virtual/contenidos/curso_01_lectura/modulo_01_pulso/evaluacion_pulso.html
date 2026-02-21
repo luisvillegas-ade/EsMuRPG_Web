@@ -181,39 +181,9 @@
         // Cloud Save globals
         const URL_API = "https://script.google.com/macros/s/AKfycbzsPf8M9GzkEPLtI2MtfbVWYaFl_E2UjAjAh-weOarVvQtAooqL6AQhaoLawSTYb4EUgA/exec";
 
-        // --- Sistema de Identidad Multicanal ---
-        let emailAlumno = 'anonimo@saamus.com'; // 4. Fallback
-
-        // 1. Prioridad: URL
         const urlParams = new URLSearchParams(window.location.search);
-        let urlEmail = urlParams.get('email');
-
-        // 2. Prioridad: LocalStorage
-        let localEmail = localStorage.getItem('saamus_usuario_email');
-
-        // 3. Prioridad: Referrer
-        let referrerEmail = null;
-        try {
-            if (document.referrer) {
-                const refUrl = new URL(document.referrer);
-                referrerEmail = refUrl.searchParams.get('email');
-            }
-        } catch (e) {
-            console.warn("No se pudo parsear el referrer:", e);
-        }
-
-        // Asignación con prioridades
-        if (urlEmail) {
-            emailAlumno = urlEmail;
-        } else if (localEmail) {
-            emailAlumno = localEmail;
-        } else if (referrerEmail) {
-            emailAlumno = referrerEmail;
-        }
-
+        const emailAlumno = urlParams.get('email') || 'sin_email@error.com';
         console.log("IDENTIDAD DETECTADA:", emailAlumno);
-        // ----------------------------------------
-
         async function guardarEnLaNube(email, actividad) {
             try {
                 await fetch(URL_API, {

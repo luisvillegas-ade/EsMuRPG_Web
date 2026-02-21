@@ -286,6 +286,21 @@
             }
         }
     </script>
+
+    <script>
+        // Capturamos el mail de la URL
+        const params = new URLSearchParams(window.location.search);
+        const miEmail = params.get('email');
+
+        if (miEmail) {
+            // Se lo pegamos a todos los botones que lleven al temario
+            document.querySelectorAll('a').forEach(link => {
+                if (link.href.includes('temario.html')) {
+                    link.href += `?email=${miEmail}`;
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>
