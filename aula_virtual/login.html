@@ -89,20 +89,34 @@
         const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbzsPf8M9GzkEPLtI2MtfbVWYaFl_E2UjAjAh-weOarVvQtAooqL6AQhaoLawSTYb4EUgA/exec";
 
         function iniciarSesion() {
-            const email = document.getElementById('email').value;
+            const emailInput = document.getElementById('email').value.trim(); // .trim() quita espacios molestos
             const pass = document.getElementById('pass').value;
             const btn = document.getElementById('btn-ingresar');
 
-            if (!email || !pass) {
+            if (!emailInput || !pass) {
                 alert("Por favor, completa usuario y contraseña.");
                 return;
             }
-            // Guardamos la credencial del alumno en la sesión actual
-            localStorage.setItem('saamus_usuario_email', email);
+
+            // --- DIAGNÓSTICO DE CIBERDEFENSA ---
+            console.log("Intentando guardar email:", emailInput);
+            localStorage.setItem('saamus_usuario_email', emailInput);
+
+            // Verificamos inmediatamente si se guardó
+            const guardado = localStorage.getItem('saamus_usuario_email');
+            console.log("Verificación en memoria:", guardado);
+
+            if (!guardado) {
+                alert("Error crítico: El navegador no permite guardar tu sesión.");
+                return;
+            }
+            // ----------------------------------
+
             btn.innerText = "Verificando...";
             btn.disabled = true;
-            // Redirección al Servidor de Google (Validación)
-            window.location.href = `${URL_APPS_SCRIPT}?email=${email}&pass=${pass}&dest=aula`;
+
+            // Redirección al Servidor de Google
+            window.location.href = `${URL_APPS_SCRIPT}?email=${emailInput}&pass=${pass}&dest=aula`;
         }
     </script>
 
