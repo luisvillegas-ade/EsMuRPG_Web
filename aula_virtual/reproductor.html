@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAAMUS - Reproductor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="w-full max-w-4xl">
+        <a href="temario.html"
+            class="inline-flex items-center gap-2 text-gray-400 hover:text-[#fbbf24] mb-6 transition-colors">
+            <i class="ph ph-arrow-left text-xl"></i> Volver al Temario
+        </a>
+
+        <div class="bg-[#161b22] p-2 rounded-2xl border border-[#30363d] shadow-2xl">
+            <div class="aspect-video w-full rounded-xl overflow-hidden relative">
+                <iframe id="videoFrame" class="absolute top-0 left-0 w-full h-full" src="" frameborder="0"
+                    allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="mt-6">
+            <h1 id="videoTitulo" class="text-2xl font-bold text-[#fbbf24] mb-2 uppercase tracking-tight">Cargando
+                video...</h1>
+            <p id="videoDetalle" class="text-gray-400">Escuela de Música - SAAMUS</p>
+        </div>
+    </div>
+
+    <script>
+        // --- LÓGICA DE DETECCIÓN DINÁMICA ---
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const videoId = urlParams.get('v'); // Captura el ID de YouTube
+            const titulo = urlParams.get('t');  // Captura el Título
+
+            if (videoId) {
+                document.getElementById('videoFrame').src = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
+                if (titulo) {
+                    document.getElementById('videoTitulo').innerText = decodeURIComponent(titulo);
+                }
+            } else {
+                document.getElementById('videoTitulo').innerText = "Video no encontrado";
+            }
+        };
+    </script>
+</body>
+
+</html>

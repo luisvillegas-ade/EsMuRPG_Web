@@ -13,14 +13,14 @@ const datosCurso = {
                     "tipo": "pdf",
                     "titulo": "Guía de Lectura Musical (Cajita de Música)",
                     "detalle": "Lectura • PDF • 15 min",
-                    "url": "material/pdfs/mod1_paisaje_sonoro.pdf",
+                    "url": "material/pdfs/Andean_Rhythmic_Pulse.pdf",
                     "completado": true
                 },
                 {
                     "tipo": "video",
                     "titulo": "Introducción al Pulso",
-                    "detalle": "Video • 10 min",
-                    "url": "#",
+                    "detalle": "Video • 5 min",
+                    "url": "reproductor.html?v=pj79XlyncZ8&t=Introducción al Pulso",
                     "completado": true
                 },
                 {
@@ -46,19 +46,7 @@ const datosCurso = {
                 }
             ]
         },
-        {
-            "id": "M02",
-            "numero": "02",
-            "titulo": "La Chacarera",
-            "estado": "bloqueado",
-            "recursos": []
-        },
-        {
-            "id": "M03",
-            "numero": "03",
-            "titulo": "El Vals Criollo",
-            "estado": "bloqueado",
-            "recursos": []
-        }
+        { "id": "M02", "numero": "02", "titulo": "La Chacarera", "estado": "bloqueado", "recursos": [] },
+        { "id": "M03", "numero": "03", "titulo": "El Vals Criollo", "estado": "bloqueado", "recursos": [] }
     ]
 };
