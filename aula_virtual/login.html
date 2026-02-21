@@ -100,7 +100,8 @@
 
             btn.innerText = "Verificando...";
             btn.disabled = true;
-
+            // Guardamos la credencial del alumno en la sesión actual
+            localStorage.setItem('saamus_usuario_email', email);
             // Redirección al Servidor de Google (Validación)
             window.location.href = `${URL_APPS_SCRIPT}?email=${email}&pass=${pass}&dest=aula`;
         }

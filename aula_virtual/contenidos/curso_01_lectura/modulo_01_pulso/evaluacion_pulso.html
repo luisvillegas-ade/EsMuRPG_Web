@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Latido de la Pacha</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0d1117',
+                        card: '#161b22',
+                        amber: '#fbbf24',
+                        terracotta: '#ea580c',
+                        light: '#c9d1d9'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+        body {
+            background-color: theme('colors.dark');
+            color: theme('colors.light');
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            touch-action: manipulation;
+            /* Disable double-tap zoom delay */
+        }
+
+        .dot {
+            transition: all 0.2s;
+        }
+
+        .dot.active {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px theme('colors.amber');
+            background-color: theme('colors.amber');
+        }
+
+        .dot.silence {
+            border: 2px dashed theme('colors.light');
+            background-color: transparent !important;
+            opacity: 0.5;
+        }
+
+        .dot.hit-perfect {
+            background-color: #22c55e !important;
+            box-shadow: 0 0 10px #22c55e;
+            border-color: #22c55e;
+            opacity: 1;
+        }
+
+        .dot.hit-ok {
+            background-color: #eab308 !important;
+            box-shadow: 0 0 10px #eab308;
+            border-color: #eab308;
+            opacity: 1;
+        }
+
+        .dot.miss {
+            background-color: #ef4444 !important;
+            box-shadow: 0 0 10px #ef4444;
+            border-color: #ef4444;
+            opacity: 1;
+        }
+
+        .game-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-[#0d1117] text-[#c9d1d9] min-h-screen flex flex-col items-center p-4 selection:bg-[#ea580c] selection:text-white">
+
+    <a href="../../../temario.html"
+        class="fixed top-4 left-4 xl:top-8 xl:left-8 z-50 bg-[#161b22] border border-[#30363d] text-[#c9d1d9] hover:text-white px-4 py-2 rounded-full flex items-center gap-2 transition-colors shadow-lg">
+        <i class="ph-bold ph-arrow-left"></i> Cancelar y Volver
+    </a>
+
+    <header class="w-full max-w-2xl mt-16 md:mt-8 mb-8 text-center">
+        <h1
+            class="text-3xl md:text-5xl font-extrabold text-amber flex items-center justify-center gap-3 drop-shadow-lg">
+            <i class="ph-fill ph-heartbeat"></i> El Latido de la Pacha
+        </h1>
+        <p class="mt-2 text-lg text-light opacity-80">Evaluación de Memoria Rítmica y Pulso Interno</p>
+    </header>
+
+    <main class="w-full max-w-2xl bg-[#161b22] border-[#30363d] rounded-2xl border p-6 md:p-10 shadow-2xl relative">
+
+        <!-- PANTALLA DE INICIO -->
+        <div id="start-screen" class="flex flex-col items-center justify-center text-center py-10">
+            <i
+                class="ph-duotone ph-metronome text-7xl text-terracotta mb-6 drop-shadow-[0_0_15px_rgba(234,88,12,0.5)]"></i>
+            <h2 class="text-2xl font-semibold mb-4 text-white">¿Podrás mantener el ritmo?</h2>
+            <p class="mb-8 max-w-md text-gray-400">
+                Escucha el bombo a 60 BPM. Sigue el pulso marcándolo con la <strong>barra espaciadora</strong> o tocando
+                el <strong>botón central</strong>.<br><br>
+                Prepárate, porque <span class="text-terracotta font-bold">el sonido desaparecerá durante 4
+                    tiempos</span>. Demuestra tu conexión interior y no pierdas el pulso.
+            </p>
+            <button id="start-btn"
+                class="bg-terracotta hover:bg-[#c2410c] text-white font-bold text-xl py-4 px-10 rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(234,88,12,0.4)] hover:shadow-[0_0_30px_rgba(234,88,12,0.6)] flex items-center gap-2">
+                <i class="ph-bold ph-play"></i> INICIAR EVALUACIÓN
+            </button>
+        </div>
+
+        <!-- PANTALLA DE JUEGO -->
+        <div id="game-screen" class="hidden flex-col items-center w-full">
+            <div class="flex justify-between w-full mb-2 text-sm font-semibold tracking-wider text-gray-400">
+                <span id="fase-texto">ESCUCHA Y MARCA</span>
+                <span><span id="beat-counter">1</span>/16</span>
+            </div>
+
+            <!-- SECUENCIA DE BEATS -->
+            <div class="grid grid-cols-4 md:grid-cols-4 gap-4 md:gap-6 w-full mb-10" id="dots-container">
+                <!-- Se inyectan 16 dots vía JS -->
+            </div>
+
+            <!-- FEEDBACK TEXT -->
+            <div id="feedback-text" class="h-8 text-2xl font-bold mb-6 opacity-0 transition-opacity">
+                ¡Perfecto!
+            </div>
+
+            <!-- BOTÓN DE TAP -->
+            <button id="tap-btn"
+                class="game-btn w-48 h-48 md:w-56 md:h-56 rounded-full bg-amber flex items-center justify-center shadow-[0_0_40px_rgba(251,191,36,0.3)] border-4 border-[#161b22] outline-none transition-colors duration-150 select-none">
+                <div class="text-dark flex flex-col items-center pointer-events-none">
+                    <i class="ph-fill ph-hand-tap text-6xl md:text-7xl"></i>
+                    <span class="font-bold mt-2 text-sm md:text-base tracking-wide">TAP (Espacio)</span>
+                </div>
+            </button>
+        </div>
+
+        <!-- PANTALLA DE RESULTADOS -->
+        <div id="results-screen" class="hidden flex-col items-center justify-center text-center py-6">
+            <div id="result-icon" class="text-7xl mb-4 drop-shadow-[0_0_15px_currentColor]"></div>
+            <h2 class="text-3xl font-bold text-white mb-2" id="result-title">Evaluación Completada</h2>
+            <p class="text-xl text-amber mb-6 font-semibold" id="result-rank">Rango: Experto</p>
+
+            <div class="bg-dark rounded-xl p-6 w-full max-w-sm mb-8 border border-gray-700 shadow-inner">
+                <p class="text-sm text-gray-400 mb-2 uppercase tracking-wide">Aciertos en el Silencio</p>
+                <div class="text-5xl font-bold text-white"><span id="score-text">0</span> <span
+                        class="text-2xl text-gray-500">/ 4</span></div>
+            </div>
+
+            <button id="finish-btn"
+                class="bg-transparent border-2 border-amber text-amber hover:bg-amber hover:text-dark font-bold py-3 px-8 rounded-full transition-all duration-300 flex items-center gap-2">
+                <i class="ph-bold ph-arrow-left"></i> VOLVER AL TEMARIO
+            </button>
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <script>
+        // DOM Elements
+        const startBtn = document.getElementById('start-btn');
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const dotsContainer = document.getElementById('dots-container');
+        const tapBtn = document.getElementById('tap-btn');
+        const feedbackText = document.getElementById('feedback-text');
+        const faseTexto = document.getElementById('fase-texto');
+        const beatCounter = document.getElementById('beat-counter');
+        const scoreText = document.getElementById('score-text');
+        const resultRank = document.getElementById('result-rank');
+        const resultIcon = document.getElementById('result-icon');
+        const finishBtn = document.getElementById('finish-btn');
+
+        // Cloud Save globals
+        const URL_API = "PEGA_AQUI_TU_URL_DE_APPS_SCRIPT_QUE_TERMINA_EN_EXEC";
+        const emailAlumno = localStorage.getItem('saamus_usuario_email') || 'anonimo@saamus.com';
+
+        async function guardarEnLaNube(email, actividad) {
+            try {
+                await fetch(URL_API, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8'
+                    },
+                    redirect: 'follow',
+                    body: JSON.stringify({
+                        email: email,
+                        actividad: actividad,
+                        resultado: 'Aprobado'
+                    })
+                });
+            } catch (error) {
+                console.error("Error al guardar en la nube:", error);
+            }
+        }
+
+        // Web Audio / Loop Globals
+        let audioCtx;
+        const BPM = 60;
+        const SECONDS_PER_BEAT = 60.0 / BPM;
+        const TOTAL_BEATS = 16;
+        const SCHEDULE_AHEAD_TIME = 0.1;
+
+        let nextNoteTime = 0;
+        let currentBeat = 1;
+        let isPlaying = false;
+        let timerID;
+
+        // Evaluation State
+        let expectedBeatTimes = [];
+        let userTaps = [];
+        let lastTapTime = 0;
+
+        // Setup visual beat indicators
+        function setupGrid() {
+            dotsContainer.innerHTML = '';
+            for (let i = 1; i <= TOTAL_BEATS; i++) {
+                const dot = document.createElement('div');
+                dot.id = `dot-${i}`;
+                dot.className = 'dot w-full aspect-square rounded-full bg-gray-700 shadow-inner flex items-center justify-center text-xs text-gray-500 font-bold';
+                dot.innerText = i; // Numbers to help track
+                if (i >= 9 && i <= 12) {
+                    dot.classList.add('silence');
+                }
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        function playDrumHit(time) {
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            // Sub-bass 100Hz punch for "Bombo"
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(100, time);
+            osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.3);
+
+            gainNode.gain.setValueAtTime(1, time);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, time + 0.3);
+
+            osc.start(time);
+            osc.stop(time + 0.3);
+        }
+
+        function scheduleNote(beatNumber, time) {
+            expectedBeatTimes[beatNumber] = time;
+
+            // Only play audio on normal beats (not during blackout/silence 9-12)
+            if (beatNumber < 9 || beatNumber > 12) {
+                playDrumHit(time);
+            }
+
+            // UI Sync with audio
+            const timeToWait = (time - audioCtx.currentTime) * 1000;
+            setTimeout(() => {
+                if (!isPlaying) return;
+
+                // Clear active outline from previous beats
+                for (let i = 1; i <= TOTAL_BEATS; i++) {
+                    const el = document.getElementById(`dot-${i}`);
+                    if (el) el.classList.remove('active');
+                }
+
+                // Highlight current beat dot
+                const currentDot = document.getElementById(`dot-${beatNumber}`);
+                if (currentDot) {
+                    currentDot.classList.add('active');
+                    setTimeout(() => { if (currentDot) currentDot.classList.remove('active'); }, 150);
+                }
+
+                beatCounter.innerText = beatNumber;
+
+                // Phase text updates
+                if (beatNumber >= 9 && beatNumber <= 12) {
+                    faseTexto.innerText = "MANTÉN EL PULSO";
+                    faseTexto.classList.add("text-terracotta");
+                    faseTexto.classList.remove("text-gray-400");
+                } else {
+                    faseTexto.innerText = "ESCUCHA Y MARCA";
+                    faseTexto.classList.remove("text-terracotta");
+                    faseTexto.classList.add("text-gray-400");
+                }
+
+                // Identify if the PREVIOUS beat was missed entirely (checked ~400ms after it played)
+                if (beatNumber > 1) {
+                    setTimeout(() => {
+                        const prev = beatNumber - 1;
+                        if (!userTaps[prev]) {
+                            const el = document.getElementById(`dot-${prev}`);
+                            if (el && !el.classList.contains('hit-perfect') && !el.classList.contains('hit-ok')) {
+                                el.classList.add('miss');
+                            }
+                            userTaps[prev] = { status: 'miss' };
+                        }
+                    }, 400);
+                }
+            }, Math.max(0, timeToWait));
+
+            if (beatNumber === TOTAL_BEATS) {
+                // Determine test end
+                setTimeout(() => {
+                    // Check if final beat missed
+                    if (!userTaps[TOTAL_BEATS]) {
+                        const el = document.getElementById(`dot-${TOTAL_BEATS}`);
+                        if (el && !el.classList.contains('hit-perfect') && !el.classList.contains('hit-ok')) {
+                            el.classList.add('miss');
+                        }
+                        userTaps[TOTAL_BEATS] = { status: 'miss' };
+                    }
+                    finalizeTest();
+                }, Math.max(0, timeToWait) + 1500); // Wait bit more before moving to results
+            }
+        }
+
+        function nextNote() {
+            nextNoteTime += SECONDS_PER_BEAT;
+            currentBeat++;
+        }
+
+        function scheduler() {
+            while (currentBeat <= TOTAL_BEATS && nextNoteTime < audioCtx.currentTime + SCHEDULE_AHEAD_TIME) {
+                scheduleNote(currentBeat, nextNoteTime);
+                nextNote();
+            }
+            if (isPlaying && currentBeat <= TOTAL_BEATS) {
+                timerID = setTimeout(scheduler, 25.0);
+            }
+        }
+
+        function initializeAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function showUIFeedback(msg, textColor) {
+            feedbackText.innerText = msg;
+            feedbackText.className = `h-8 text-2xl font-bold mb-4 ${textColor} transition-opacity duration-200`;
+            feedbackText.style.opacity = 1;
+
+            setTimeout(() => {
+                feedbackText.style.opacity = 0;
+            }, 500);
+        }
+
+        // Tap handling logic (Zero latency priority)
+        function handleInput(e) {
+            // Mobile fast tapping fix: preventDefault is crucial here combined with { passive: false }
+            e.preventDefault();
+
+            if (!isPlaying) return;
+            if (e.type === 'keydown' && e.code !== 'Space') return;
+
+            const now = Date.now();
+            if (now - lastTapTime < 150) return; // debounce double triggers from mixing touch+mouse
+            lastTapTime = now;
+
+            const tapAudioTime = audioCtx.currentTime;
+
+            // Base visual interaction with the tap button
+            tapBtn.style.transform = "scale(0.95)";
+            setTimeout(() => tapBtn.style.transform = "scale(1)", 100);
+
+            // Reset temp BG colors
+            tapBtn.classList.remove('bg-amber', 'bg-[#22c55e]', 'bg-[#eab308]', 'bg-[#ef4444]');
+
+            let closestBeat = -1;
+            let minDiff = Infinity;
+
+            // Search for the closest beat (+1 into future too)
+            for (let i = Math.max(1, currentBeat - 1); i <= Math.min(currentBeat + 1, TOTAL_BEATS); i++) {
+                if (expectedBeatTimes[i]) {
+                    let diff = Math.abs(tapAudioTime - expectedBeatTimes[i]);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closestBeat = i;
+                    }
+                }
+            }
+
+            // Window of tolerance: +/- 450ms
+            if (closestBeat !== -1 && minDiff < 0.45) {
+                if (userTaps[closestBeat]) {
+                    // Penalty! double tap on same beat
+                    tapBtn.classList.add('bg-[#ef4444]');
+                    setTimeout(() => { tapBtn.classList.replace('bg-[#ef4444]', 'bg-amber') }, 100);
+                    return;
+                }
+
+                let status = 'miss';
+                let dotClass = 'miss';
+
+                if (minDiff < 0.150) { // < 150ms GREEN
+                    status = 'perfect';
+                    dotClass = 'hit-perfect';
+                    showUIFeedback('¡Perfecto!', 'text-green-500');
+                    tapBtn.classList.add('bg-[#22c55e]');
+                } else if (minDiff < 0.300) { // < 300ms YELLOW
+                    status = 'ok';
+                    dotClass = 'hit-ok';
+                    showUIFeedback('¡Bien!', 'text-yellow-500');
+                    tapBtn.classList.add('bg-[#eab308]');
+                } else { // >= 300ms RED
+                    showUIFeedback('Fuera de tiempo', 'text-red-500');
+                    tapBtn.classList.add('bg-[#ef4444]');
+                }
+
+                userTaps[closestBeat] = { time: tapAudioTime, diff: minDiff, status: status };
+
+                const dot = document.getElementById(`dot-${closestBeat}`);
+                if (dot) dot.classList.add(dotClass);
+
+            } else {
+                // Complete miss
+                showUIFeedback('Fuera de tiempo', 'text-red-500');
+                tapBtn.classList.add('bg-[#ef4444]');
+            }
+
+            // Return to base color
+            setTimeout(() => {
+                tapBtn.classList.remove('bg-[#22c55e]', 'bg-[#eab308]', 'bg-[#ef4444]');
+                tapBtn.classList.add('bg-amber');
+            }, 100);
+        }
+
+        // Event Listeners
+        startBtn.addEventListener('click', () => {
+            initializeAudio();
+            startScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            gameScreen.classList.add('flex');
+
+            setupGrid();
+
+            expectedBeatTimes = [];
+            userTaps = [];
+            currentBeat = 1;
+
+            // Give a 1s count-in prep
+            nextNoteTime = audioCtx.currentTime + 1.0;
+            isPlaying = true;
+            scheduler();
+        });
+
+        window.addEventListener('keydown', handleInput);
+        tapBtn.addEventListener('mousedown', handleInput);
+        tapBtn.addEventListener('touchstart', handleInput, { passive: false });
+
+        // End Game logic
+        function finalizeTest() {
+            isPlaying = false;
+            if (timerID) clearTimeout(timerID);
+
+            gameScreen.classList.add('hidden');
+            gameScreen.classList.remove('flex');
+            resultsScreen.classList.remove('hidden');
+            resultsScreen.classList.add('flex');
+
+            // Evaluate specifically beats 9 to 12
+            let hits = 0;
+            for (let i = 9; i <= 12; i++) {
+                if (userTaps[i] && (userTaps[i].status === 'perfect' || userTaps[i].status === 'ok')) {
+                    hits++;
+                }
+            }
+
+            scoreText.innerText = hits;
+
+            const resultTitle = document.getElementById('result-title');
+            if (hits >= 3) {
+                resultTitle.innerText = "¡Excelente Trabajo!";
+                resultRank.innerText = "¡APROBADO!";
+                resultRank.className = "text-2xl text-[#22c55e] mb-6 font-bold tracking-wide";
+                resultIcon.innerHTML = `<i class="ph-duotone ph-check-circle text-[#22c55e] drop-shadow-[0_0_20px_rgba(34,197,94,0.5)]"></i>`;
+
+                // Iniciar guardado en la nube
+                finishBtn.disabled = true;
+                finishBtn.innerHTML = '<i class="ph-bold ph-spinner animate-spin"></i> Guardando en la Nube...';
+                finishBtn.classList.add('opacity-70', 'cursor-not-allowed', 'pointer-events-none');
+
+                guardarEnLaNube(emailAlumno, 'evaluacion_pulso').then(() => {
+                    finishBtn.disabled = false;
+                    finishBtn.innerHTML = '<i class="ph-bold ph-arrow-left"></i> VOLVER AL TEMARIO';
+                    finishBtn.classList.remove('opacity-70', 'cursor-not-allowed', 'pointer-events-none');
+                });
+            } else {
+                resultTitle.innerText = "Sigue Practicando";
+                resultRank.innerText = "DESAPROBADO";
+                resultRank.className = "text-2xl text-[#ea580c] mb-6 font-bold tracking-wide";
+                resultIcon.innerHTML = `<i class="ph-duotone ph-warning-circle text-[#ea580c] drop-shadow-[0_0_20px_rgba(234,88,12,0.5)]"></i>`;
+            }
+        }
+
+        finishBtn.addEventListener('click', () => {
+            if (!finishBtn.disabled) {
+                window.location.href = '../../../temario.html';
+            }
+        });
+
+    </script>
+</body>
+
+</html>

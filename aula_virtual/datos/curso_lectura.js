@@ -11,9 +11,9 @@ const datosCurso = {
             "recursos": [
                 {
                     "tipo": "pdf",
-                    "titulo": "Guía de Lectura Musical (Cajita de Música)",
-                    "detalle": "Lectura • PDF • 15 min",
-                    "url": "material/pdfs/Andean_Rhythmic_Pulse.pdf",
+                    "titulo": "Introducción a la Lectura",
+                    "detalle": "Lectura • PDF • 5 min",
+                    "url": "contenidos/curso_01_lectura/modulo_01_pulso/Andean_Rhythmic_Pulse.pdf",
                     "completado": true
                 },
                 {
@@ -27,7 +27,7 @@ const datosCurso = {
                     "tipo": "app",
                     "titulo": "Laboratorio Interactivo: Sintiendo el Pulso",
                     "detalle": "App Web • Práctica visual y sonora",
-                    "url": "apps/laboratorio_pulso.html",
+                    "url": "contenidos/curso_01_lectura/modulo_01_pulso/laboratorio_pulso.html",
                     "completado": false
                 },
                 {
@@ -40,8 +40,15 @@ const datosCurso = {
                 {
                     "tipo": "test",
                     "titulo": "Test de Ritmo Básico",
-                    "detalle": "Evaluación • 20 min",
-                    "url": "#",
+                    "detalle": "Evaluación • 1 min",
+                    "url": "contenidos/curso_01_lectura/modulo_01_pulso/evaluacion_pulso.html",
+                    "completado": false
+                },
+                {
+                    "tipo": "pdf",
+                    "titulo": "Resumen Visual: El Pulso de la Tierra",
+                    "detalle": "Infografía • PDF • 5 min",
+                    "url": "contenidos/curso_01_lectura/modulo_01_pulso/resumen_modulo1.png",
                     "completado": false
                 }
             ]
