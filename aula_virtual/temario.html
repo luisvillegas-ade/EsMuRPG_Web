@@ -120,6 +120,7 @@
                     "recursos": [
                         { "tipo": "pdf", "titulo": "Guía de Lectura Musical", "detalle": "Lectura • PDF • 15 min", "url": "material/pdfs/guia.pdf", "completado": true },
                         { "tipo": "video", "titulo": "Introducción al Pulso", "detalle": "Video • 10 min", "url": "#", "completado": true },
+                        { "tipo": "app", "titulo": "Laboratorio Interactivo: Sintiendo el Pulso", "detalle": "App Web • Práctica visual y sonora", "url": "apps/laboratorio_pulso.html", "completado": false },
                         { "tipo": "rpg", "titulo": "Práctica Inmersiva: El Patio de Tierra", "detalle": "RPG Interactivo • XP: +50", "url": "../sistema_rpg/game.html", "completado": false },
                         { "tipo": "test", "titulo": "Test de Ritmo Básico", "detalle": "Evaluación • 20 min", "url": "#", "completado": false }
                     ]
@@ -206,6 +207,11 @@
 
             // Mapeo (switch) para el tipo de recurso
             switch (recurso.tipo) {
+                case 'app':
+                    // Icono de app cian
+                    iconoHTML = '<div class="w-12 h-12 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-2xl shadow-inner border border-cyan-500/20"><i class="ph ph-flask"></i></div>';
+                    estilosFila = 'bg-[#1a1f26]/80 border border-cyan-500/30 hover:border-cyan-500/60 shadow-[0_4px_20px_-5px_rgba(6,182,212,0.15)] relative overflow-hidden';
+                    break;
                 case 'pdf':
                     // Icono de archivo azul
                     iconoHTML = '<div class="w-12 h-12 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center text-2xl shadow-inner border border-blue-500/20"><i class="ph ph-file-pdf"></i></div>';
@@ -236,6 +242,14 @@
                         <span class="tracking-wide">JUGAR</span>
                     </a>
                 `;
+            } else if (recurso.tipo === 'app') {
+                // Botón ABRIR APP en cyan
+                accionDerechaHTML = `
+                    <a href="${recurso.url}" class="px-4 py-2 bg-gradient-to-r from-cyan-600 to-cyan-400 hover:from-cyan-500 hover:to-cyan-300 text-white font-bold text-sm rounded-lg transition-all duration-300 shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.6)] transform hover:-translate-y-0.5 flex items-center gap-2">
+                        <i class="ph-bold ph-lightning text-base"></i> 
+                        <span class="tracking-wide">ABRIR APP</span>
+                    </a>
+                `;
             } else {
                 if (recurso.completado === true) {
                     // Check (✓) dorado a la derecha
@@ -247,12 +261,18 @@
             }
 
             // Construir el contenedor del recurso (Ancla o Div dependiendo si es RPG o normal)
-            // Hacemos que toda la fila sea clickeable siempre que no sea RPG (este ya tiene botón adentro)
-            const TagFila = recurso.tipo !== 'rpg' ? 'a' : 'div';
-            const AtribHref = recurso.tipo !== 'rpg' ? `href="${recurso.url}"` : '';
+            // Hacemos que toda la fila sea clickeable siempre que no sea RPG ni APP (estos ya tienen botón adentro)
+            const esAccionExterna = (recurso.tipo === 'rpg' || recurso.tipo === 'app');
+            const TagFila = !esAccionExterna ? 'a' : 'div';
+            const AtribHref = !esAccionExterna ? `href="${recurso.url}"` : '';
 
-            // Si es RPG, agregamos un brillo de fondo sutil
-            const RpgGlow = recurso.tipo === 'rpg' ? '<div class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-amber/5 to-transparent pointer-events-none"></div>' : '';
+            // Si es RPG o APP, agregamos un brillo de fondo sutil
+            let RpgGlow = '';
+            if (recurso.tipo === 'rpg') {
+                RpgGlow = '<div class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-amber/5 to-transparent pointer-events-none"></div>';
+            } else if (recurso.tipo === 'app') {
+                RpgGlow = '<div class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-cyan-500/5 to-transparent pointer-events-none"></div>';
+            }
 
             return `
                 <${TagFila} ${AtribHref} class="flex items-center justify-between p-3 md:p-4 rounded-xl transition-all duration-300 group/recurso ${estilosFila}">

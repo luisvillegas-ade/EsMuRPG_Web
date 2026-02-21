@@ -1,4 +1,4 @@
-const datosCursoLectura = {
+const datosCurso = {
     "id_curso": "CUR_001",
     "titulo": "Ecos de la Pacha: Introducción a la Lectura",
     "avance_total": 45,
@@ -22,6 +22,13 @@ const datosCursoLectura = {
                     "detalle": "Video • 10 min",
                     "url": "#",
                     "completado": true
+                },
+                {
+                    "tipo": "app",
+                    "titulo": "Laboratorio Interactivo: Sintiendo el Pulso",
+                    "detalle": "App Web • Práctica visual y sonora",
+                    "url": "apps/laboratorio_pulso.html",
+                    "completado": false
                 },
                 {
                     "tipo": "rpg",
