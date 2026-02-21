@@ -278,6 +278,21 @@
         // Ejecutar en window.onload
         window.onload = renderizarCurso;
     </script>
+
+    <script>
+        // Esta función se asegura de que todos los links del temario lleven el email
+        const params = new URLSearchParams(window.location.search);
+        const email = params.get('email');
+
+        if (email) {
+            // Buscamos todos los links y les agregamos el email del alumno
+            document.querySelectorAll('a').forEach(link => {
+                const url = new URL(link.href, window.location.origin);
+                url.searchParams.set('email', email);
+                link.href = url.href;
+            });
+        }
+    </script>
 </body>
 
 </html>

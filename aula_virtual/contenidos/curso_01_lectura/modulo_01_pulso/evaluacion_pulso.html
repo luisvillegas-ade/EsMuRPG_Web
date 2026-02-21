@@ -180,7 +180,9 @@
 
         // Cloud Save globals
         const URL_API = "https://script.google.com/macros/s/AKfycbzsPf8M9GzkEPLtI2MtfbVWYaFl_E2UjAjAh-weOarVvQtAooqL6AQhaoLawSTYb4EUgA/exec";
-        const emailAlumno = localStorage.getItem('saamus_usuario_email') || 'anonimo@saamus.com';
+        const urlParams = new URLSearchParams(window.location.search);
+        // Prioridad 1: URL, Prioridad 2: LocalStorage, Prioridad 3: Anónimo
+        const emailAlumno = urlParams.get('email') || localStorage.getItem('saamus_usuario_email') || 'anonimo@saamus.com';
 
         async function guardarEnLaNube(email, actividad) {
             try {
