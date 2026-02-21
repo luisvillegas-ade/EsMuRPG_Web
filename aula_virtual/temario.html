@@ -110,6 +110,40 @@
     <!-- SCRIPT DE RENDERIZADO -->
     <script src="datos/curso_lectura.js"></script>
     <script>
+        const URL_API = "https://script.google.com/macros/s/AKfycbzsPf8M9GzkEPLtI2MtfbVWYaFl_E2UjAjAh-weOarVvQtAooqL6AQhaoLawSTYb4EUgA/exec";
+        const paramsInit = new URLSearchParams(window.location.search);
+
+        const paramEmail = paramsInit.get('email');
+        if (paramEmail) {
+            localStorage.setItem('saamus_usuario_email', paramEmail);
+        }
+        const emailAlumno = paramEmail || localStorage.getItem('saamus_usuario_email');
+
+        let listaProgreso = [];
+        const progresoUrl = paramsInit.get('progreso');
+        if (progresoUrl) {
+            try {
+                listaProgreso = JSON.parse(decodeURIComponent(progresoUrl));
+                localStorage.setItem('saamus_progreso', progresoUrl);
+            } catch (e) { console.error('Error parseando progreso', e); }
+        } else {
+            const progresoLS = localStorage.getItem('saamus_progreso');
+            if (progresoLS) {
+                try {
+                    listaProgreso = JSON.parse(progresoLS);
+                } catch (e) { console.error('Error parseando progreso LS', e); }
+            }
+        }
+
+        window.registrarClicRecurso = function (actividad) {
+            if (!emailAlumno) return;
+            fetch(URL_API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                redirect: 'follow',
+                body: JSON.stringify({ email: emailAlumno, actividad: actividad, resultado: 'Completado' })
+            }).catch(e => console.error(e));
+        };
 
         // 3. REQUISITOS DE LÓGICA E INTERFAZ
         function renderizarCurso() {
@@ -232,9 +266,10 @@
                     </a>
                 `;
             } else {
-                if (recurso.completado === true) {
-                    // Check (✓) dorado a la derecha
-                    accionDerechaHTML = '<div class="w-7 h-7 rounded-full bg-amber/20 text-amber flex items-center justify-center text-sm border border-amber/40 shadow-[0_0_5px_rgba(251,191,36,0.2)]" title="Completado"><i class="ph-bold ph-check"></i></div>';
+                const completado = recurso.completado === true || listaProgreso.includes(recurso.id) || listaProgreso.includes(recurso.titulo);
+                if (completado) {
+                    // Check (✓) dorado a la derecha con ph-check-circle
+                    accionDerechaHTML = '<div class="w-7 h-7 rounded-full bg-amber/20 text-amber flex items-center justify-center text-xl border border-amber/40 shadow-[0_0_5px_rgba(251,191,36,0.2)]" title="Completado"><i class="ph-fill ph-check-circle text-amber"></i></div>';
                 } else {
                     // Círculo vacío O
                     accionDerechaHTML = '<div class="w-7 h-7 rounded-full border-2 border-border flex items-center justify-center hover:border-gray-500 transition-colors" title="Pendiente"></div>';
@@ -247,6 +282,11 @@
             const TagFila = !esAccionExterna ? 'a' : 'div';
             const AtribHref = !esAccionExterna ? `href="${recurso.url}"` : '';
 
+            // Evento registrar para PDF o Video
+            const onClickAttr = (!esAccionExterna && (recurso.tipo === 'pdf' || recurso.tipo === 'video'))
+                ? `onclick="registrarClicRecurso('${recurso.id || recurso.titulo}')"`
+                : '';
+
             // Si es RPG o APP, agregamos un brillo de fondo sutil
             let RpgGlow = '';
             if (recurso.tipo === 'rpg') {
@@ -256,7 +296,7 @@
             }
 
             return `
-                <${TagFila} ${AtribHref} class="flex items-center justify-between p-3 md:p-4 rounded-xl transition-all duration-300 group/recurso ${estilosFila}">
+                <${TagFila} ${AtribHref} ${onClickAttr} class="flex items-center justify-between p-3 md:p-4 rounded-xl transition-all duration-300 group/recurso ${estilosFila}">
                     ${RpgGlow}
                     <div class="flex items-center gap-4 z-10">
                         ${iconoHTML}
@@ -281,15 +321,20 @@
 
     <script>
         // Esta función se asegura de que todos los links del temario lleven el email
-        const params = new URLSearchParams(window.location.search);
-        const email = params.get('email');
+        const params2 = new URLSearchParams(window.location.search);
+        let linkEmail = params2.get('email');
+        if (!linkEmail) {
+            linkEmail = localStorage.getItem('saamus_usuario_email');
+        }
 
-        if (email) {
+        if (linkEmail) {
             // Buscamos todos los links y les agregamos el email del alumno
             document.querySelectorAll('a').forEach(link => {
-                const url = new URL(link.href, window.location.origin);
-                url.searchParams.set('email', email);
-                link.href = url.href;
+                try {
+                    const url = new URL(link.href, window.location.origin);
+                    url.searchParams.set('email', linkEmail);
+                    link.href = url.href;
+                } catch (e) { }
             });
         }
     </script>
