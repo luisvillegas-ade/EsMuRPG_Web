@@ -186,18 +186,33 @@
         console.log("IDENTIDAD DETECTADA:", emailAlumno);
         async function guardarEnLaNube(email, actividad) {
             try {
-                await fetch(URL_API, {
+                // Recupera del Ancla de dashboard, forzando prioridad al localStorage unificado
+                const emailEfectivo = localStorage.getItem('saamus_email') || email;
+
+                const respuesta = await fetch(URL_API, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'text/plain;charset=utf-8'
                     },
                     redirect: 'follow',
                     body: JSON.stringify({
-                        email: email,
+                        accion: "guardar_progreso", // <--- ESTO LE DICE AL BACKEND QUÉ HACER
+                        email: emailEfectivo,
                         actividad: actividad,
                         resultado: 'Aprobado'
                     })
                 });
+
+                const data = await respuesta.json();
+                console.log("Guardado en la nube:", data);
+
+                // MUY IMPORTANTE: Actualizar el progreso local para que el temario dibuje el tilde sin recargar el login
+                let progresoLocal = JSON.parse(localStorage.getItem('saamus_progreso') || '[]');
+                if (!progresoLocal.includes(actividad)) {
+                    progresoLocal.push(actividad);
+                }
+                localStorage.setItem('saamus_progreso', JSON.stringify(progresoLocal));
+
             } catch (error) {
                 console.error("Error al guardar en la nube:", error);
             }
@@ -497,6 +512,8 @@
                     finishBtn.disabled = false;
                     finishBtn.innerHTML = '<i class="ph-bold ph-arrow-left"></i> VOLVER AL TEMARIO';
                     finishBtn.classList.remove('opacity-70', 'cursor-not-allowed', 'pointer-events-none');
+
+                    alert("¡Nivel superado y guardado en tu progreso!");
                 });
             } else {
                 resultTitle.innerText = "Sigue Practicando";

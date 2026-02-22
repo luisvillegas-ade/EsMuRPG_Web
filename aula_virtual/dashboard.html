@@ -127,8 +127,8 @@
                 <!-- Profile -->
                 <div class="flex items-center gap-3 border-l border-saamus-border pl-4 sm:pl-6">
                     <div class="text-right hidden sm:block">
-                        <div class="text-sm font-medium text-white">Luis Villegas</div>
-                        <div class="text-xs text-gray-500">Estudiante</div>
+                        <div id="nombre_usuario" class="text-sm font-medium text-white">Estudiante</div>
+                        <div class="text-xs text-gray-500">Alumno SAAMUS</div>
                     </div>
                     <div
                         class="h-9 w-9 rounded-full bg-gradient-to-br from-saamus-terracotta to-purple-600 flex items-center justify-center text-white font-bold border border-saamus-border shadow-inner">
@@ -154,12 +154,12 @@
                 </div>
 
                 <!-- Course Card (Hero) -->
-                <div
-                    class="bg-saamus-card border border-saamus-border rounded-xl overflow-hidden shadow-lg hover:border-gray-600 transition-colors group relative">
+                <div id="tarjeta_mod1"
+                    class="bg-saamus-card border border-saamus-border rounded-xl overflow-hidden shadow-lg hover:border-gray-600 transition-colors group relative transition-all duration-300">
                     <!-- Decor/Accent Line -->
                     <div class="h-1 w-full bg-gradient-to-r from-saamus-amber to-saamus-terracotta"></div>
 
-                    <div class="p-5 sm:p-6 lg:p-8 grid lg:grid-cols-3 gap-6 lg:gap-8">
+                    <div class="p-5 sm:p-6 lg:p-8 grid lg:grid-cols-3 gap-6 lg:gap-8 relative z-10">
 
                         <!-- Col 1: Course Info -->
                         <div class="lg:col-span-2 space-y-4">
@@ -288,38 +288,63 @@
     </script>
 
     <script>
-        // Capturamos el mail de la URL
-        const params = new URLSearchParams(window.location.search);
-        const miEmail = params.get('email');
-
-        if (miEmail) {
-            // Se lo pegamos a todos los botones que lleven al temario
-            document.querySelectorAll('a').forEach(link => {
-                if (link.href.includes('temario.html')) {
-                    link.href += `?email=${miEmail}`;
-                }
-            });
-        }
-    </script>
-
-    <script>
-        // --- SISTEMA DE ANCLAJE DE SESIÓN ---
-        window.onload = function () {
+        document.addEventListener("DOMContentLoaded", function () {
+            // 1. ATRAPAR DATOS DE LA URL
             const params = new URLSearchParams(window.location.search);
-            const emailDesdeURL = params.get('email');
+            const email = params.get('email');
 
-            if (emailDesdeURL) {
-                // Guardamos el mail en la memoria del navegador de forma persistente
-                localStorage.setItem('saamus_usuario_email', emailDesdeURL);
-                console.log("Sesión anclada para:", emailDesdeURL);
-            } else {
-                console.log("No se detectó email en la URL, buscando en memoria...");
-                const emailEnMemoria = localStorage.getItem('saamus_usuario_email');
-                if (!emailEnMemoria) {
-                    console.error("ALERTA: Usuario no identificado.");
+            if (email) {
+                // Venimos del login, guardamos todo en el navegador
+                localStorage.setItem('saamus_email', email);
+                localStorage.setItem('saamus_user', params.get('user') || "Estudiante");
+                localStorage.setItem('saamus_accesos', params.get('accesos') || "[]");
+                localStorage.setItem('saamus_progreso', params.get('progreso') || "[]");
+
+                // Limpiamos la URL para que quede bonita y segura
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            // 2. SALUDAR AL USUARIO
+            const nombreUsuario = localStorage.getItem('saamus_user');
+            if (nombreUsuario) {
+                // Actualiza el H1 o div con id="nombre_usuario"
+                const elementoNombre = document.getElementById('nombre_usuario');
+                if (elementoNombre) elementoNombre.innerText = nombreUsuario;
+            }
+
+            // 3. DESBLOQUEAR MÓDULOS (Lógica "A la carta")
+            const misAccesos = JSON.parse(localStorage.getItem('saamus_accesos') || "[]");
+
+            // Tarjeta del Módulo Hero (Tecnicatura en Ritmos Folclóricos / ITEM_CARRERA por ejemplo)
+            const tarjetaMod1 = document.getElementById('tarjeta_mod1');
+            if (tarjetaMod1) {
+                // Aquí deberías poner el ID real que devuelve el Backend (ej: ITEM_CARRERA, MOD_001)
+                // Para simplificar, suponemos que si incluye la carrera o cualquier mod, desbloqueamos la tarjeta.
+                // Como es la vista del dashboard principal, por ahora validaremos un ID genérico o asumimos que si el array tiene algo, está inscripto
+                const tieneAcceso = misAccesos.includes("ITEM_CARRERA") || misAccesos.includes("MOD_001") || misAccesos.length > 0;
+
+                if (tieneAcceso) {
+                    // TIENE ACCESO: Quitamos atributos restrictivos por si estuvieran
+                    tarjetaMod1.classList.remove('opacity-50', 'grayscale', 'cursor-not-allowed');
+                    // No hace falta inyectar HTML de éxito si ya se ve normal, pero como demo lo podemos dejar visual si deseas
+                    // tarjetaMod1.innerHTML += `<div class="absolute top-2 right-2 text-green-500 font-bold bg-green-900/40 px-3 py-1 rounded">✅ Acceso Habilitado</div>`;
+                } else {
+                    // NO TIENE ACCESO: Ponemos candado y bloqueamos
+                    tarjetaMod1.classList.add('opacity-50', 'grayscale', 'cursor-not-allowed');
+                    tarjetaMod1.innerHTML += `<div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center z-50 backdrop-blur-sm rounded-xl">
+                                                <i class="ph-fill ph-lock-key text-5xl text-red-500 mb-2 drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]"></i>
+                                                <div class="text-white font-bold text-lg mb-4">Requiere Inscripción</div>
+                                                <a href="catalogo.html" class="bg-saamus-terracotta hover:bg-orange-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors">Ir al Catálogo</a>
+                                              </div>`;
+
+                    // Bloqueamos clics en el botón de ir al temario si hicieran clic bajo el overlay
+                    const botonTemario = tarjetaMod1.querySelector('a[href*="temario"]');
+                    if (botonTemario) {
+                        botonTemario.onclick = function (e) { e.preventDefault(); };
+                    }
                 }
             }
-        };
+        });
     </script>
 </body>
 

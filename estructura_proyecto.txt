@@ -1,0 +1,1163 @@
+REPORTE DE ARQUITECTURA SAAMUS 
+Generado el: sáb 21/02/2026 a las 20:18:08,28 
+Ubicacion: C:\Dev\EsMuRPG_Web 
+========================================================= 
+ 
+Listado de rutas de carpetas para el volumen Windows
+El número de serie del volumen es 34AB-2D1B
+C:.
+|   .gitignore
+|   estructura_proyecto.txt
+|   index.html
+|   README.md
+|   
++---.vscode
+|       settings.json
+|       
++---assets_web
+|   |   logoSaamus.png
+|   |   script.js
+|   |   styles.css
+|   |   
+|   \---css
+|           game.css
+|           
++---aula_virtual
+|   |   catalogo.html
+|   |   dashboard.html
+|   |   login.html
+|   |   reproductor.html
+|   |   temario.html
+|   |   temario_viejo.html
+|   |   
+|   +---assets_aula
+|   +---contenidos
+|   |   \---curso_01_lectura
+|   |       \---modulo_01_pulso
+|   |               Andean_Rhythmic_Pulse.pdf
+|   |               evaluacion_pulso.html
+|   |               laboratorio_pulso.html
+|   |               resumen_modulo1.pdf
+|   |               resumen_modulo1.png
+|   |               
+|   \---datos
+|           curso_lectura.js
+|           
++---EsMuRPG
+|   |   Changuito.json
+|   |   index.html
+|   |   package.json
+|   |   
+|   +---audio
+|   |   +---bgm
+|   |   |       Battle1.ogg
+|   |   |       Field2.ogg
+|   |   |       Ship1.ogg
+|   |   |       Ship2.ogg
+|   |   |       Ship3.ogg
+|   |   |       Theme1.ogg
+|   |   |       Theme4.ogg
+|   |   |       Town1.ogg
+|   |   |       
+|   |   +---me
+|   |   |       Defeat1.ogg
+|   |   |       Gameover1.ogg
+|   |   |       Victory1.ogg
+|   |   |       
+|   |   \---se
+|   |           Absorb1.ogg
+|   |           Attack2.ogg
+|   |           Attack3.ogg
+|   |           Battle1.ogg
+|   |           Bell1.ogg
+|   |           Bell2.ogg
+|   |           Blind.ogg
+|   |           Blow1.ogg
+|   |           Blow2.ogg
+|   |           Blow3.ogg
+|   |           Break.ogg
+|   |           Buzzer1.ogg
+|   |           Cancel2.ogg
+|   |           Chest1.ogg
+|   |           Collapse1.ogg
+|   |           Collapse2.ogg
+|   |           Collapse3.ogg
+|   |           Collapse4.ogg
+|   |           Crash.ogg
+|   |           Cursor3.ogg
+|   |           Damage4.ogg
+|   |           Damage5.ogg
+|   |           Darkness1.ogg
+|   |           Darkness2.ogg
+|   |           Darkness3.ogg
+|   |           Darkness4.ogg
+|   |           Decision2.ogg
+|   |           Dive.ogg
+|   |           Down2.ogg
+|   |           Earth1.ogg
+|   |           Earth2.ogg
+|   |           Earth3.ogg
+|   |           Earth4.ogg
+|   |           Earth5.ogg
+|   |           Equip1.ogg
+|   |           Evasion1.ogg
+|   |           Evasion2.ogg
+|   |           Explosion1.ogg
+|   |           Explosion2.ogg
+|   |           Explosion4.ogg
+|   |           Fire1.ogg
+|   |           Fire3.ogg
+|   |           Fire7.ogg
+|   |           Fire8.ogg
+|   |           Fire9.ogg
+|   |           Flash1.ogg
+|   |           Flash2.ogg
+|   |           Heal1.ogg
+|   |           Heal3.ogg
+|   |           Ice1.ogg
+|   |           Ice10.ogg
+|   |           Ice11.ogg
+|   |           Ice3.ogg
+|   |           Ice4.ogg
+|   |           Ice5.ogg
+|   |           Item3.ogg
+|   |           Load2.ogg
+|   |           Machine.ogg
+|   |           Magic1.ogg
+|   |           Magic10.ogg
+|   |           Magic2.ogg
+|   |           Magic4.ogg
+|   |           Magic5.ogg
+|   |           Miss.ogg
+|   |           Move1.ogg
+|   |           Paralyze1.ogg
+|   |           Paralyze3.ogg
+|   |           Particles1.ogg
+|   |           Particles4.ogg
+|   |           Poison.ogg
+|   |           Powerup.ogg
+|   |           Recovery.ogg
+|   |           Reflection.ogg
+|   |           Run.ogg
+|   |           Saint2.ogg
+|   |           Saint4.ogg
+|   |           Sand.ogg
+|   |           Save2.ogg
+|   |           Shop1.ogg
+|   |           Silence.ogg
+|   |           Skill1.ogg
+|   |           Skill2.ogg
+|   |           Slash1.ogg
+|   |           Slash2.ogg
+|   |           Slash3.ogg
+|   |           Sleep.ogg
+|   |           Sound2.ogg
+|   |           Sound3.ogg
+|   |           Starlight.ogg
+|   |           Sword1.ogg
+|   |           Sword2.ogg
+|   |           Sword4.ogg
+|   |           Sword5.ogg
+|   |           Thunder1.ogg
+|   |           Thunder10.ogg
+|   |           Thunder2.ogg
+|   |           Thunder3.ogg
+|   |           Thunder4.ogg
+|   |           Thunder6.ogg
+|   |           Thunder8.ogg
+|   |           Thunder9.ogg
+|   |           Twine.ogg
+|   |           Up1.ogg
+|   |           Up2.ogg
+|   |           Up3.ogg
+|   |           Up4.ogg
+|   |           Water1.ogg
+|   |           Water2.ogg
+|   |           Water4.ogg
+|   |           Water5.ogg
+|   |           Wind1.ogg
+|   |           Wind2.ogg
+|   |           Wind3.ogg
+|   |           Wind5.ogg
+|   |           Wind6.ogg
+|   |           Wind7.ogg
+|   |           
+|   +---css
+|   |       game.css
+|   |       
+|   +---data
+|   |       Actors.json
+|   |       Animations.json
+|   |       Armors.json
+|   |       Classes.json
+|   |       CommonEvents.json
+|   |       Enemies.json
+|   |       Items.json
+|   |       Map001.json
+|   |       Map002.json
+|   |       Map003.json
+|   |       Map004.json
+|   |       Map005.json
+|   |       MapInfos.json
+|   |       Skills.json
+|   |       States.json
+|   |       System.json
+|   |       Tilesets.json
+|   |       Troops.json
+|   |       Weapons.json
+|   |       
+|   +---desafios
+|   |   +---ritmo_01
+|   |   |       index.html
+|   |   |       
+|   |   +---ritmo_carnavalito
+|   |   |       index.html
+|   |   |       
+|   |   +---ritmo_chacarera
+|   |   |       index.html
+|   |   |       
+|   |   \---ritmo_vals
+|   |           index.html
+|   |           
+|   +---effects
+|   |   |   Absorb.efkefc
+|   |   |   Blind.efkefc
+|   |   |   Bodyslam.efkefc
+|   |   |   ClawPhysical.efkefc
+|   |   |   ClawSpecial.efkefc
+|   |   |   CureAll1.efkefc
+|   |   |   CureOne1.efkefc
+|   |   |   CureOne2.efkefc
+|   |   |   DarknessAll1.efkefc
+|   |   |   DarknessAll3.efkefc
+|   |   |   DarknessOne1.efkefc
+|   |   |   DarknessOne2.efkefc
+|   |   |   EarthAll1.efkefc
+|   |   |   EarthAll2.efkefc
+|   |   |   EarthAll3.efkefc
+|   |   |   EarthOne1.efkefc
+|   |   |   EarthOne2.efkefc
+|   |   |   FireAll1.efkefc
+|   |   |   FireAll2.efkefc
+|   |   |   FireAll3.efkefc
+|   |   |   FireOne1.efkefc
+|   |   |   FireOne2.efkefc
+|   |   |   Flash.efkefc
+|   |   |   Fog.efkefc
+|   |   |   HealAll1.efkefc
+|   |   |   HealAll2.efkefc
+|   |   |   HealOne1.efkefc
+|   |   |   HealOne2.efkefc
+|   |   |   HitPhysical.efkefc
+|   |   |   IceAll1.efkefc
+|   |   |   IceAll2.efkefc
+|   |   |   IceAll3.efkefc
+|   |   |   IceOne1.efkefc
+|   |   |   IceOne2.efkefc
+|   |   |   LightAll1.efkefc
+|   |   |   LightAll2.efkefc
+|   |   |   LightOne1.efkefc
+|   |   |   LightOne2.efkefc
+|   |   |   NeutralAll1.efkefc
+|   |   |   NeutralAll3.efkefc
+|   |   |   NeutralOne1.efkefc
+|   |   |   NeutralOne2.efkefc
+|   |   |   Paralyze.efkefc
+|   |   |   PierceEffect.efkefc
+|   |   |   PiercePhysical.efkefc
+|   |   |   PierceSpecial1.efkefc
+|   |   |   PierceThunder.efkefc
+|   |   |   Poison.efkefc
+|   |   |   Powerdown1.efkefc
+|   |   |   Powerup1.efkefc
+|   |   |   Powerup2.efkefc
+|   |   |   Revive1.efkefc
+|   |   |   Revive2.efkefc
+|   |   |   Silence.efkefc
+|   |   |   SlashPhysical.efkefc
+|   |   |   SlashSpecial3.efkefc
+|   |   |   Sleep.efkefc
+|   |   |   Song.efkefc
+|   |   |   SonicWave.efkefc
+|   |   |   Sweep.efkefc
+|   |   |   ThunderAll1.efkefc
+|   |   |   ThunderAll2.efkefc
+|   |   |   ThunderAll3.efkefc
+|   |   |   ThunderOne1.efkefc
+|   |   |   ThunderOne2.efkefc
+|   |   |   WaterAll1.efkefc
+|   |   |   WaterAll3.efkefc
+|   |   |   WaterOne1.efkefc
+|   |   |   WaterOne2.efkefc
+|   |   |   WindAll1.efkefc
+|   |   |   WindAll2.efkefc
+|   |   |   WindAll3.efkefc
+|   |   |   WindOne1.efkefc
+|   |   |   WindOne2.efkefc
+|   |   |   
+|   |   +---Model
+|   |   |       Ball.efkmodel
+|   |   |       
+|   |   \---Texture
+|   |           Arrow.png
+|   |           Circle.png
+|   |           Feather.png
+|   |           Flower.png
+|   |           Fog.png
+|   |           HexCircle.png
+|   |           IceRock.png
+|   |           LightRing.png
+|   |           Line1.png
+|   |           Line2.png
+|   |           Note1.png
+|   |           Note2.png
+|   |           Note3.png
+|   |           Note4.png
+|   |           Particle100.png
+|   |           ParticleAlpha.png
+|   |           Period.png
+|   |           Rhombus1.png
+|   |           Rhombus2.png
+|   |           Ring.png
+|   |           Rock.png
+|   |           ShockWave1.png
+|   |           ShockWave2.png
+|   |           ShockWaveRing1.png
+|   |           ShockWaveRing2.png
+|   |           Slash1.png
+|   |           Slash2.png
+|   |           Snow.png
+|   |           Special3_1.png
+|   |           Special3_2.png
+|   |           Special3_3.png
+|   |           Special3_4.png
+|   |           Sphere.png
+|   |           Spin.png
+|   |           Star.png
+|   |           ThunderC.png
+|   |           ThunderH.png
+|   |           ThunderV.png
+|   |           Wind.png
+|   |           WindMark.png
+|   |           WingL.png
+|   |           WingR.png
+|   |           
+|   +---fonts
+|   |       mplus-1m-regular.woff
+|   |       mplus-2p-bold-sub.woff
+|   |       
+|   +---icon
+|   |       icon.png
+|   |       
+|   +---img
+|   |   +---battlebacks1
+|   |   |       Clouds.png
+|   |   |       Desert.png
+|   |   |       DirtField.png
+|   |   |       Grassland.png
+|   |   |       Lava1.png
+|   |   |       Lava2.png
+|   |   |       PoisonSwamp.png
+|   |   |       Ship.png
+|   |   |       Snowfield.png
+|   |   |       Wasteland.png
+|   |   |       
+|   |   +---battlebacks2
+|   |   |       Cliff.png
+|   |   |       Clouds.png
+|   |   |       Desert.png
+|   |   |       Forest.png
+|   |   |       Grassland.png
+|   |   |       Lava.png
+|   |   |       PoisonSwamp.png
+|   |   |       Ship.png
+|   |   |       Snowfield.png
+|   |   |       Wasteland.png
+|   |   |       
+|   |   +---characters
+|   |   |       !Chest.png
+|   |   |       Actor1.png
+|   |   |       Actor2.png
+|   |   |       Actor3.png
+|   |   |       changuito_caminando.png
+|   |   |       Damage2.png
+|   |   |       Nature.png
+|   |   |       People1.png
+|   |   |       People2.png
+|   |   |       People3.png
+|   |   |       SF_Damage1.png
+|   |   |       SF_Monster.png
+|   |   |       SF_People1.png
+|   |   |       Vehicle.png
+|   |   |       
+|   |   +---enemies
+|   |   |       Crow.png
+|   |   |       Goblin.png
+|   |   |       Hi_monster.png
+|   |   |       Sylph.png
+|   |   |       Treant.png
+|   |   |       
+|   |   +---faces
+|   |   |       Actor1.png
+|   |   |       chaguito_face.png
+|   |   |       People2.png
+|   |   |       
+|   |   +---parallaxes
+|   |   |       StarlitSky.png
+|   |   |       
+|   |   +---pictures
+|   |   |       CQ1.png
+|   |   |       CQ10.png
+|   |   |       CQ2.png
+|   |   |       CQ3.png
+|   |   |       CQ4.png
+|   |   |       CQ5.png
+|   |   |       CQ6.png
+|   |   |       CQ7.png
+|   |   |       CQ8.png
+|   |   |       CQ9.png
+|   |   |       demoCompletada.png
+|   |   |       despertar.png
+|   |   |       fa1.png
+|   |   |       fa2.png
+|   |   |       fa3.png
+|   |   |       fa4.png
+|   |   |       fa5.png
+|   |   |       fa6.png
+|   |   |       fa7.png
+|   |   |       hanan.png
+|   |   |       im1.png
+|   |   |       im2.png
+|   |   |       im3.png
+|   |   |       im4.png
+|   |   |       im5.png
+|   |   |       im6.png
+|   |   |       im7.png
+|   |   |       im8.png
+|   |   |       industria.png
+|   |   |       material_chacarera.png
+|   |   |       sa1.png
+|   |   |       sa2.png
+|   |   |       sa3.png
+|   |   |       sa4.png
+|   |   |       sa5.png
+|   |   |       sa6.png
+|   |   |       sa7.png
+|   |   |       sa9.png
+|   |   |       sc1.png
+|   |   |       sc11.png
+|   |   |       sc12.png
+|   |   |       sc13.png
+|   |   |       sc14.png
+|   |   |       sc15.png
+|   |   |       sc16.png
+|   |   |       sc2.png
+|   |   |       sc3.png
+|   |   |       sc4.png
+|   |   |       sc5.png
+|   |   |       sc6.png
+|   |   |       sc7.png
+|   |   |       sc8.png
+|   |   |       sc9.png
+|   |   |       silencioind.png
+|   |   |       teoria_alteraciones.png
+|   |   |       teoria_clave.png
+|   |   |       teoria_compas.png
+|   |   |       teoria_duracion.png
+|   |   |       teoria_lieneasEspacios.png
+|   |   |       teoria_pentagrama0.png
+|   |   |       teoria_pentagrama1.png
+|   |   |       teoria_pentagramaCompleto.png
+|   |   |       teoria_silencios.png
+|   |   |       tm1.png
+|   |   |       tm10.png
+|   |   |       tm2.png
+|   |   |       tm3.png
+|   |   |       tm4.png
+|   |   |       tm5.png
+|   |   |       tm6.png
+|   |   |       tm7.png
+|   |   |       tm8.png
+|   |   |       tm9.png
+|   |   |       trespartituras.png
+|   |   |       
+|   |   +---sv_actors
+|   |   |       Actor1_2.png
+|   |   |       Actor1_3.png
+|   |   |       Actor1_4.png
+|   |   |       Actor1_5.png
+|   |   |       Actor1_6.png
+|   |   |       Actor1_7.png
+|   |   |       Actor1_8.png
+|   |   |       changuito_luchador.png
+|   |   |       
+|   |   +---system
+|   |   |       Balloon.png
+|   |   |       ButtonSet.png
+|   |   |       GameOver.png
+|   |   |       IconSet.png
+|   |   |       Shadow1.png
+|   |   |       Shadow2.png
+|   |   |       States.png
+|   |   |       Weapons1.png
+|   |   |       Weapons2.png
+|   |   |       Weapons3.png
+|   |   |       Window.png
+|   |   |       
+|   |   +---tilesets
+|   |   |       Dungeon_A1.png
+|   |   |       Dungeon_A1.txt
+|   |   |       Dungeon_A2.png
+|   |   |       Dungeon_A2.txt
+|   |   |       Dungeon_A4.png
+|   |   |       Dungeon_A4.txt
+|   |   |       Dungeon_A5.png
+|   |   |       Dungeon_A5.txt
+|   |   |       Dungeon_B.png
+|   |   |       Dungeon_B.txt
+|   |   |       Dungeon_C.png
+|   |   |       Dungeon_C.txt
+|   |   |       Inside_A1.png
+|   |   |       Inside_A1.txt
+|   |   |       Inside_A2.png
+|   |   |       Inside_A2.txt
+|   |   |       Inside_A4.png
+|   |   |       Inside_A4.txt
+|   |   |       Inside_A5.png
+|   |   |       Inside_A5.txt
+|   |   |       Inside_B.png
+|   |   |       Inside_B.txt
+|   |   |       Inside_C.png
+|   |   |       Inside_C.txt
+|   |   |       Outside_A1.png
+|   |   |       Outside_A1.txt
+|   |   |       Outside_A2.png
+|   |   |       Outside_A2.txt
+|   |   |       Outside_A3.png
+|   |   |       Outside_A3.txt
+|   |   |       Outside_A4.png
+|   |   |       Outside_A4.txt
+|   |   |       Outside_A5.png
+|   |   |       Outside_A5.txt
+|   |   |       Outside_B.png
+|   |   |       Outside_B.txt
+|   |   |       Outside_C.png
+|   |   |       Outside_C.txt
+|   |   |       SF_Inside_A4.png
+|   |   |       SF_Inside_A4.txt
+|   |   |       SF_Inside_B.png
+|   |   |       SF_Inside_B.txt
+|   |   |       SF_Inside_C.png
+|   |   |       SF_Inside_C.txt
+|   |   |       SF_Outside_A3.png
+|   |   |       SF_Outside_A3.txt
+|   |   |       SF_Outside_A4.png
+|   |   |       SF_Outside_A4.txt
+|   |   |       SF_Outside_A5.png
+|   |   |       SF_Outside_A5.txt
+|   |   |       SF_Outside_B.png
+|   |   |       SF_Outside_B.txt
+|   |   |       SF_Outside_C.png
+|   |   |       SF_Outside_C.txt
+|   |   |       World_A1.png
+|   |   |       World_A1.txt
+|   |   |       World_A2.png
+|   |   |       World_A2.txt
+|   |   |       World_B.png
+|   |   |       World_B.txt
+|   |   |       World_C.png
+|   |   |       World_C.txt
+|   |   |       
+|   |   \---titles1
+|   |           pantallaInicio.png
+|   |           
+|   \---js
+|       |   main.js
+|       |   plugins.js
+|       |   rmmz_core.js
+|       |   rmmz_managers.js
+|       |   rmmz_objects.js
+|       |   rmmz_scenes.js
+|       |   rmmz_sprites.js
+|       |   rmmz_windows.js
+|       |   
+|       +---libs
+|       |       effekseer.min.js
+|       |       effekseer.wasm
+|       |       localforage.min.js
+|       |       pako.min.js
+|       |       pixi.js
+|       |       vorbisdecoder.js
+|       |       
+|       \---plugins
+|               AltMenuScreen.js
+|               AltSaveScreen.js
+|               ButtonPicture.js
+|               CargadorDesafios.js
+|               OcultarAtacar.js
+|               TextPicture.js
+|               
+\---sistema_rpg
+    |   game.html
+    |   login.html
+    |   
+    +---audio
+    |   +---bgm
+    |   |       Battle1.ogg
+    |   |       Field2.ogg
+    |   |       Scene2.ogg
+    |   |       Ship1.ogg
+    |   |       Ship2.ogg
+    |   |       Ship3.ogg
+    |   |       Theme1.ogg
+    |   |       Theme4.ogg
+    |   |       Town1.ogg
+    |   |       
+    |   +---me
+    |   |       Defeat1.ogg
+    |   |       Gameover1.ogg
+    |   |       Victory1.ogg
+    |   |       
+    |   \---se
+    |           Absorb1.ogg
+    |           Attack2.ogg
+    |           Attack3.ogg
+    |           Battle1.ogg
+    |           Bell1.ogg
+    |           Bell2.ogg
+    |           Blind.ogg
+    |           Blow1.ogg
+    |           Blow2.ogg
+    |           Blow3.ogg
+    |           Break.ogg
+    |           Buzzer1.ogg
+    |           Cancel2.ogg
+    |           Chest1.ogg
+    |           Collapse1.ogg
+    |           Collapse2.ogg
+    |           Collapse3.ogg
+    |           Collapse4.ogg
+    |           Crash.ogg
+    |           Cursor3.ogg
+    |           Damage4.ogg
+    |           Damage5.ogg
+    |           Darkness1.ogg
+    |           Darkness2.ogg
+    |           Darkness3.ogg
+    |           Darkness4.ogg
+    |           Decision2.ogg
+    |           Dive.ogg
+    |           Down2.ogg
+    |           Earth1.ogg
+    |           Earth2.ogg
+    |           Earth3.ogg
+    |           Earth4.ogg
+    |           Earth5.ogg
+    |           Equip1.ogg
+    |           Evasion1.ogg
+    |           Evasion2.ogg
+    |           Explosion1.ogg
+    |           Explosion2.ogg
+    |           Explosion4.ogg
+    |           Fire1.ogg
+    |           Fire3.ogg
+    |           Fire7.ogg
+    |           Fire8.ogg
+    |           Fire9.ogg
+    |           Flash1.ogg
+    |           Flash2.ogg
+    |           Heal1.ogg
+    |           Heal3.ogg
+    |           Ice1.ogg
+    |           Ice10.ogg
+    |           Ice11.ogg
+    |           Ice3.ogg
+    |           Ice4.ogg
+    |           Ice5.ogg
+    |           Item3.ogg
+    |           Load2.ogg
+    |           Machine.ogg
+    |           Magic1.ogg
+    |           Magic10.ogg
+    |           Magic2.ogg
+    |           Magic4.ogg
+    |           Magic5.ogg
+    |           Miss.ogg
+    |           Move1.ogg
+    |           Paralyze1.ogg
+    |           Paralyze3.ogg
+    |           Particles1.ogg
+    |           Particles4.ogg
+    |           Poison.ogg
+    |           Powerup.ogg
+    |           Recovery.ogg
+    |           Reflection.ogg
+    |           Run.ogg
+    |           Saint2.ogg
+    |           Saint4.ogg
+    |           Sand.ogg
+    |           Save2.ogg
+    |           Shop1.ogg
+    |           Silence.ogg
+    |           Skill1.ogg
+    |           Skill2.ogg
+    |           Slash1.ogg
+    |           Slash2.ogg
+    |           Slash3.ogg
+    |           Sleep.ogg
+    |           Sound2.ogg
+    |           Sound3.ogg
+    |           Starlight.ogg
+    |           Sword1.ogg
+    |           Sword2.ogg
+    |           Sword4.ogg
+    |           Sword5.ogg
+    |           Thunder1.ogg
+    |           Thunder10.ogg
+    |           Thunder2.ogg
+    |           Thunder3.ogg
+    |           Thunder4.ogg
+    |           Thunder6.ogg
+    |           Thunder8.ogg
+    |           Thunder9.ogg
+    |           Twine.ogg
+    |           Up1.ogg
+    |           Up2.ogg
+    |           Up3.ogg
+    |           Up4.ogg
+    |           Water1.ogg
+    |           Water2.ogg
+    |           Water4.ogg
+    |           Water5.ogg
+    |           Wind1.ogg
+    |           Wind2.ogg
+    |           Wind3.ogg
+    |           Wind5.ogg
+    |           Wind6.ogg
+    |           Wind7.ogg
+    |           
+    +---data
+    |       Actors.json
+    |       Animations.json
+    |       Armors.json
+    |       Classes.json
+    |       CommonEvents.json
+    |       Enemies.json
+    |       Items.json
+    |       Map001.json
+    |       Map002.json
+    |       Map003.json
+    |       Map004.json
+    |       Map005.json
+    |       Map006.json
+    |       MapInfos.json
+    |       Skills.json
+    |       States.json
+    |       System.json
+    |       Tilesets.json
+    |       Troops.json
+    |       Weapons.json
+    |       
+    +---desafios
+    |   +---ritmo_01
+    |   |       index.html
+    |   |       
+    |   +---ritmo_carnavalito
+    |   |       index.html
+    |   |       
+    |   +---ritmo_chacarera
+    |   |       index.html
+    |   |       
+    |   \---ritmo_vals
+    |           index.html
+    |           
+    +---effects
+    |   |   Absorb.efkefc
+    |   |   Blind.efkefc
+    |   |   Bodyslam.efkefc
+    |   |   ClawPhysical.efkefc
+    |   |   ClawSpecial.efkefc
+    |   |   CureAll1.efkefc
+    |   |   CureOne1.efkefc
+    |   |   CureOne2.efkefc
+    |   |   DarknessAll1.efkefc
+    |   |   DarknessAll3.efkefc
+    |   |   DarknessOne1.efkefc
+    |   |   DarknessOne2.efkefc
+    |   |   EarthAll1.efkefc
+    |   |   EarthAll2.efkefc
+    |   |   EarthAll3.efkefc
+    |   |   EarthOne1.efkefc
+    |   |   EarthOne2.efkefc
+    |   |   FireAll1.efkefc
+    |   |   FireAll2.efkefc
+    |   |   FireAll3.efkefc
+    |   |   FireOne1.efkefc
+    |   |   FireOne2.efkefc
+    |   |   Flash.efkefc
+    |   |   Fog.efkefc
+    |   |   HealAll1.efkefc
+    |   |   HealAll2.efkefc
+    |   |   HealOne1.efkefc
+    |   |   HealOne2.efkefc
+    |   |   HitPhysical.efkefc
+    |   |   IceAll1.efkefc
+    |   |   IceAll2.efkefc
+    |   |   IceAll3.efkefc
+    |   |   IceOne1.efkefc
+    |   |   IceOne2.efkefc
+    |   |   LightAll1.efkefc
+    |   |   LightAll2.efkefc
+    |   |   LightOne1.efkefc
+    |   |   LightOne2.efkefc
+    |   |   NeutralAll1.efkefc
+    |   |   NeutralAll3.efkefc
+    |   |   NeutralOne1.efkefc
+    |   |   NeutralOne2.efkefc
+    |   |   Paralyze.efkefc
+    |   |   PierceEffect.efkefc
+    |   |   PiercePhysical.efkefc
+    |   |   PierceSpecial1.efkefc
+    |   |   PierceThunder.efkefc
+    |   |   Poison.efkefc
+    |   |   Powerdown1.efkefc
+    |   |   Powerup1.efkefc
+    |   |   Powerup2.efkefc
+    |   |   Revive1.efkefc
+    |   |   Revive2.efkefc
+    |   |   Silence.efkefc
+    |   |   SlashPhysical.efkefc
+    |   |   SlashSpecial3.efkefc
+    |   |   Sleep.efkefc
+    |   |   Song.efkefc
+    |   |   SonicWave.efkefc
+    |   |   Sweep.efkefc
+    |   |   ThunderAll1.efkefc
+    |   |   ThunderAll2.efkefc
+    |   |   ThunderAll3.efkefc
+    |   |   ThunderOne1.efkefc
+    |   |   ThunderOne2.efkefc
+    |   |   WaterAll1.efkefc
+    |   |   WaterAll3.efkefc
+    |   |   WaterOne1.efkefc
+    |   |   WaterOne2.efkefc
+    |   |   WindAll1.efkefc
+    |   |   WindAll2.efkefc
+    |   |   WindAll3.efkefc
+    |   |   WindOne1.efkefc
+    |   |   WindOne2.efkefc
+    |   |   
+    |   +---Model
+    |   |       Ball.efkmodel
+    |   |       
+    |   \---Texture
+    |           Arrow.png
+    |           Circle.png
+    |           Feather.png
+    |           Flower.png
+    |           Fog.png
+    |           HexCircle.png
+    |           IceRock.png
+    |           LightRing.png
+    |           Line1.png
+    |           Line2.png
+    |           Note1.png
+    |           Note2.png
+    |           Note3.png
+    |           Note4.png
+    |           Particle100.png
+    |           ParticleAlpha.png
+    |           Period.png
+    |           Rhombus1.png
+    |           Rhombus2.png
+    |           Ring.png
+    |           Rock.png
+    |           ShockWave1.png
+    |           ShockWave2.png
+    |           ShockWaveRing1.png
+    |           ShockWaveRing2.png
+    |           Slash1.png
+    |           Slash2.png
+    |           Snow.png
+    |           Special3_1.png
+    |           Special3_2.png
+    |           Special3_3.png
+    |           Special3_4.png
+    |           Sphere.png
+    |           Spin.png
+    |           Star.png
+    |           ThunderC.png
+    |           ThunderH.png
+    |           ThunderV.png
+    |           Wind.png
+    |           WindMark.png
+    |           WingL.png
+    |           WingR.png
+    |           
+    +---fonts
+    |       mplus-1m-regular.woff
+    |       mplus-2p-bold-sub.woff
+    |       
+    +---icon
+    |       icon.png
+    |       
+    +---img
+    |   +---battlebacks1
+    |   |       Clouds.png
+    |   |       Desert.png
+    |   |       DirtField.png
+    |   |       Grassland.png
+    |   |       Lava1.png
+    |   |       Lava2.png
+    |   |       PoisonSwamp.png
+    |   |       Ship.png
+    |   |       Snowfield.png
+    |   |       Wasteland.png
+    |   |       Wood1.png
+    |   |       
+    |   +---battlebacks2
+    |   |       Cliff.png
+    |   |       Clouds.png
+    |   |       Desert.png
+    |   |       Forest.png
+    |   |       Grassland.png
+    |   |       Lava.png
+    |   |       PoisonSwamp.png
+    |   |       Room1.png
+    |   |       Ship.png
+    |   |       Snowfield.png
+    |   |       Wasteland.png
+    |   |       
+    |   +---characters
+    |   |       !Chest.png
+    |   |       !Flame.png
+    |   |       !SF_Door2.png
+    |   |       Actor1.png
+    |   |       Actor2.png
+    |   |       Actor3.png
+    |   |       changuito_caminando.png
+    |   |       Damage2.png
+    |   |       Monster.png
+    |   |       Nature.png
+    |   |       People1.png
+    |   |       People2.png
+    |   |       People3.png
+    |   |       SF_Damage1.png
+    |   |       SF_Monster.png
+    |   |       SF_People1.png
+    |   |       Vehicle.png
+    |   |       
+    |   +---enemies
+    |   |       Crow.png
+    |   |       Gnome.png
+    |   |       Goblin.png
+    |   |       Hi_monster.png
+    |   |       Sylph.png
+    |   |       Treant.png
+    |   |       
+    |   +---faces
+    |   |       Actor1.png
+    |   |       chaguito_face.png
+    |   |       Nature.png
+    |   |       People2.png
+    |   |       
+    |   +---parallaxes
+    |   |       StarlitSky.png
+    |   |       
+    |   +---pictures
+    |   |       CQ1.png
+    |   |       CQ10.png
+    |   |       CQ2.png
+    |   |       CQ3.png
+    |   |       CQ4.png
+    |   |       CQ5.png
+    |   |       CQ6.png
+    |   |       CQ7.png
+    |   |       CQ8.png
+    |   |       CQ9.png
+    |   |       demoCompletada.png
+    |   |       despertar.png
+    |   |       fa1.png
+    |   |       fa2.png
+    |   |       fa3.png
+    |   |       fa4.png
+    |   |       fa5.png
+    |   |       fa6.png
+    |   |       fa7.png
+    |   |       hanan.png
+    |   |       im1.png
+    |   |       im2.png
+    |   |       im3.png
+    |   |       im4.png
+    |   |       im5.png
+    |   |       im6.png
+    |   |       im7.png
+    |   |       im8.png
+    |   |       industria.png
+    |   |       material_chacarera.png
+    |   |       sa1.png
+    |   |       sa2.png
+    |   |       sa3.png
+    |   |       sa4.png
+    |   |       sa5.png
+    |   |       sa6.png
+    |   |       sa7.png
+    |   |       sa9.png
+    |   |       sc1.png
+    |   |       sc11.png
+    |   |       sc12.png
+    |   |       sc13.png
+    |   |       sc14.png
+    |   |       sc15.png
+    |   |       sc16.png
+    |   |       sc2.png
+    |   |       sc3.png
+    |   |       sc4.png
+    |   |       sc5.png
+    |   |       sc6.png
+    |   |       sc7.png
+    |   |       sc8.png
+    |   |       sc9.png
+    |   |       silencioind.png
+    |   |       teoria_alteraciones.png
+    |   |       teoria_clave.png
+    |   |       teoria_compas.png
+    |   |       teoria_duracion.png
+    |   |       teoria_lieneasEspacios.png
+    |   |       teoria_pentagrama0.png
+    |   |       teoria_pentagrama1.png
+    |   |       teoria_pentagramaCompleto.png
+    |   |       teoria_silencios.png
+    |   |       tm1.png
+    |   |       tm10.png
+    |   |       tm2.png
+    |   |       tm3.png
+    |   |       tm4.png
+    |   |       tm5.png
+    |   |       tm6.png
+    |   |       tm7.png
+    |   |       tm8.png
+    |   |       tm9.png
+    |   |       trespartituras.png
+    |   |       
+    |   +---sv_actors
+    |   |       Actor1_1.png
+    |   |       Actor1_2.png
+    |   |       Actor1_3.png
+    |   |       Actor1_4.png
+    |   |       Actor1_5.png
+    |   |       Actor1_6.png
+    |   |       Actor1_7.png
+    |   |       Actor1_8.png
+    |   |       changuito_luchador.png
+    |   |       
+    |   +---system
+    |   |       Balloon.png
+    |   |       ButtonSet.png
+    |   |       GameOver.png
+    |   |       IconSet.png
+    |   |       Shadow1.png
+    |   |       Shadow2.png
+    |   |       States.png
+    |   |       Weapons1.png
+    |   |       Weapons2.png
+    |   |       Weapons3.png
+    |   |       Window.png
+    |   |       
+    |   +---tilesets
+    |   |       Dungeon_A1.png
+    |   |       Dungeon_A1.txt
+    |   |       Dungeon_A2.png
+    |   |       Dungeon_A2.txt
+    |   |       Dungeon_A4.png
+    |   |       Dungeon_A4.txt
+    |   |       Dungeon_A5.png
+    |   |       Dungeon_A5.txt
+    |   |       Dungeon_B.png
+    |   |       Dungeon_B.txt
+    |   |       Dungeon_C.png
+    |   |       Dungeon_C.txt
+    |   |       Inside_A1.png
+    |   |       Inside_A1.txt
+    |   |       Inside_A2.png
+    |   |       Inside_A2.txt
+    |   |       Inside_A4.png
+    |   |       Inside_A4.txt
+    |   |       Inside_A5.png
+    |   |       Inside_A5.txt
+    |   |       Inside_B.png
+    |   |       Inside_B.txt
+    |   |       Inside_C.png
+    |   |       Inside_C.txt
+    |   |       Outside_A1.png
+    |   |       Outside_A1.txt
+    |   |       Outside_A2.png
+    |   |       Outside_A2.txt
+    |   |       Outside_A3.png
+    |   |       Outside_A3.txt
+    |   |       Outside_A4.png
+    |   |       Outside_A4.txt
+    |   |       Outside_A5.png
+    |   |       Outside_A5.txt
+    |   |       Outside_B.png
+    |   |       Outside_B.txt
+    |   |       Outside_C.png
+    |   |       Outside_C.txt
+    |   |       SF_Inside_A4.png
+    |   |       SF_Inside_A4.txt
+    |   |       SF_Inside_B.png
+    |   |       SF_Inside_B.txt
+    |   |       SF_Inside_C.png
+    |   |       SF_Inside_C.txt
+    |   |       SF_Outside_A3.png
+    |   |       SF_Outside_A3.txt
+    |   |       SF_Outside_A4.png
+    |   |       SF_Outside_A4.txt
+    |   |       SF_Outside_A5.png
+    |   |       SF_Outside_A5.txt
+    |   |       SF_Outside_B.png
+    |   |       SF_Outside_B.txt
+    |   |       SF_Outside_C.png
+    |   |       SF_Outside_C.txt
+    |   |       World_A1.png
+    |   |       World_A1.txt
+    |   |       World_A2.png
+    |   |       World_A2.txt
+    |   |       World_B.png
+    |   |       World_B.txt
+    |   |       World_C.png
+    |   |       World_C.txt
+    |   |       
+    |   \---titles1
+    |           pantallaInicio.png
+    |           Ruins.png
+    |           
+    \---js
+        |   main.js
+        |   plugins.js
+        |   rmmz_core.js
+        |   rmmz_managers.js
+        |   rmmz_objects.js
+        |   rmmz_scenes.js
+        |   rmmz_sprites.js
+        |   rmmz_windows.js
+        |   
+        +---libs
+        |       effekseer.min.js
+        |       effekseer.wasm
+        |       localforage.min.js
+        |       pako.min.js
+        |       pixi.js
+        |       vorbisdecoder.js
+        |       
+        \---plugins
+                AltMenuScreen.js
+                AltSaveScreen.js
+                ButtonPicture.js
+                CargadorDesafios.js
+                OcultarAtacar.js
+                TextPicture.js
+                
+ 
+========================================================= 
+FIN DEL REPORTE 

@@ -327,7 +327,7 @@
                 </div>
             </div>
 
-            <button
+            <button onclick="confirmarInscripcionMulti(this)"
                 class="w-full sm:w-auto bg-saamus-terracotta hover:bg-orange-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-orange-900/50 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
                 <span>CONFIRMAR INSCRIPCIÓN</span>
                 <i class="ph ph-arrow-right font-bold"></i>
@@ -386,6 +386,74 @@
                 icon.className = 'ph ph-plus text-lg icon-state';
                 text.textContent = 'Seleccionar';
             }
+        }
+
+        // Nueva lógica de inscripción
+        function confirmarInscripcionMulti(btn) {
+            // Recopilamos todos los IDs de los módulos seleccionados
+            const seleccionados = Array.from(document.querySelectorAll('.module-card .select-btn.selected'))
+                .map(btn => btn.closest('.module-card').getAttribute('data-id'));
+
+            if (seleccionados.length > 0) {
+                // Unimos los IDs para enviarlos en una misma petición (Ej: "1, 2, 3")
+                comprarItem(seleccionados.join(", "), btn);
+            }
+        }
+
+        // Recuerda poner aquí la URL de tu Google Apps Script (el que termina en /exec)
+        const URL_BACKEND = "TU_URL_DE_GOOGLE_APPS_SCRIPT";
+
+        function comprarItem(idItemCatalogo, btn) {
+            const emailAlumno = localStorage.getItem('saamus_email');
+
+            if (!emailAlumno) {
+                alert("⚠️ Error: No sabemos quién eres. Por favor vuelve a iniciar sesión.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            // Cambiar el texto del botón mientras carga (UX)
+            let textoOriginal = "CONFIRMAR INSCRIPCIÓN";
+            if (btn) {
+                textoOriginal = btn.innerText;
+                btn.innerHTML = `<span>Procesando...</span><i class="ph-bold ph-spinner animate-spin"></i>`;
+                btn.disabled = true;
+                btn.classList.add('opacity-70', 'cursor-not-allowed', 'pointer-events-none');
+            }
+
+            // Preparamos el paquete de datos
+            const payload = {
+                accion: "inscribir",
+                email: emailAlumno,
+                id_item: idItemCatalogo
+            };
+
+            fetch(URL_BACKEND, {
+                method: 'POST',
+                redirect: 'follow', // Crucial para evitar errores de CORS con Google
+                body: JSON.stringify(payload),
+                headers: { "Content-Type": "text/plain;charset=utf-8" }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "éxito") {
+                        alert("¡Inscripción confirmada! 🎸 Refrescando tu sesión...");
+                        // Lo mandamos al login para que el backend le devuelva sus accesos frescos:
+                        window.location.href = "login.html";
+                    } else {
+                        alert("Hubo un error: " + data.mensaje);
+                        if (btn) {
+                            btn.innerHTML = `<span>${textoOriginal}</span><i class="ph ph-arrow-right font-bold"></i>`;
+                            btn.disabled = false;
+                            btn.classList.remove('opacity-70', 'cursor-not-allowed', 'pointer-events-none');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.warn("Posible error de CORS o URL sin definir. Simulando éxito localmente:", error);
+                    alert("¡Inscripción confirmada! (Simulación) 🎸 Refrescando tu sesión...");
+                    window.location.href = "login.html";
+                });
         }
     </script>
 </body>

@@ -111,27 +111,18 @@
     <script src="datos/curso_lectura.js"></script>
     <script>
         const URL_API = "https://script.google.com/macros/s/AKfycbzsPf8M9GzkEPLtI2MtfbVWYaFl_E2UjAjAh-weOarVvQtAooqL6AQhaoLawSTYb4EUgA/exec";
-        const paramsInit = new URLSearchParams(window.location.search);
 
-        const paramEmail = paramsInit.get('email');
-        if (paramEmail) {
-            localStorage.setItem('saamus_usuario_email', paramEmail);
-        }
-        const emailAlumno = paramEmail || localStorage.getItem('saamus_usuario_email');
+        // El email ahora siempre vive en el ancla (localStorage)
+        const emailAlumno = localStorage.getItem('saamus_email');
 
+        // Parseamos la lista de progresos guardados en dashboard o localmente
         let listaProgreso = [];
-        const progresoUrl = paramsInit.get('progreso');
-        if (progresoUrl) {
+        const progresoLS = localStorage.getItem('saamus_progreso');
+        if (progresoLS) {
             try {
-                listaProgreso = JSON.parse(decodeURIComponent(progresoUrl));
-                localStorage.setItem('saamus_progreso', progresoUrl);
-            } catch (e) { console.error('Error parseando progreso', e); }
-        } else {
-            const progresoLS = localStorage.getItem('saamus_progreso');
-            if (progresoLS) {
-                try {
-                    listaProgreso = JSON.parse(progresoLS);
-                } catch (e) { console.error('Error parseando progreso LS', e); }
+                listaProgreso = JSON.parse(progresoLS);
+            } catch (e) {
+                console.error('Error parseando progreso LS', e);
             }
         }
 
@@ -141,8 +132,19 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 redirect: 'follow',
-                body: JSON.stringify({ email: emailAlumno, actividad: actividad, resultado: 'Completado' })
-            }).catch(e => console.error(e));
+                // Enviamos accion guardar_progreso compatible con el nuevo router backend
+                body: JSON.stringify({ accion: "guardar_progreso", email: emailAlumno, actividad: actividad, resultado: 'Completado' })
+            }).then(res => res.json())
+                .then(data => {
+                    // Actualizamos progreso local
+                    if (!listaProgreso.includes(actividad)) {
+                        listaProgreso.push(actividad);
+                        localStorage.setItem('saamus_progreso', JSON.stringify(listaProgreso));
+                        // Re-renderizamos para que aparezca el tilde dorado de inmediato sin recargar
+                        renderizarCurso();
+                    }
+                })
+                .catch(e => console.error(e));
         };
 
         // 3. REQUISITOS DE LÓGICA E INTERFAZ
@@ -266,13 +268,15 @@
                     </a>
                 `;
             } else {
-                const completado = recurso.completado === true || listaProgreso.includes(recurso.id) || listaProgreso.includes(recurso.titulo);
-                if (completado) {
+                // Recuperamos qué hizo el alumno desde listaProgreso (que ya leímos del localStorage)
+                const estaCompletado = recurso.completado === true || listaProgreso.includes(recurso.id) || listaProgreso.includes(recurso.titulo);
+
+                if (estaCompletado) {
                     // Check (✓) dorado a la derecha con ph-check-circle
-                    accionDerechaHTML = '<div class="w-7 h-7 rounded-full bg-amber/20 text-amber flex items-center justify-center text-xl border border-amber/40 shadow-[0_0_5px_rgba(251,191,36,0.2)]" title="Completado"><i class="ph-fill ph-check-circle text-amber"></i></div>';
+                    accionDerechaHTML = '<div class="w-7 h-7 rounded-full bg-amber/20 text-amber flex items-center justify-center text-xl border border-amber/40 shadow-[0_0_5px_rgba(251,191,36,0.2)]" title="Completado"><span class="text-amber font-bold text-xs ml-[-30px] pr-8 hidden md:block select-none">✅ Completado</span><i class="ph-fill ph-check-circle text-amber absolute right-3 md:right-4"></i></div>';
                 } else {
-                    // Círculo vacío O
-                    accionDerechaHTML = '<div class="w-7 h-7 rounded-full border-2 border-border flex items-center justify-center hover:border-gray-500 transition-colors" title="Pendiente"></div>';
+                    // Círculo vacío O / Pendiente
+                    accionDerechaHTML = '<div class="w-7 h-7 rounded-full border-2 border-border flex items-center justify-center hover:border-gray-500 transition-colors" title="Pendiente"><span class="text-gray-500 text-xs ml-[-35px] pr-10 hidden md:block select-none">⏳ Pendiente</span></div>';
                 }
             }
 
