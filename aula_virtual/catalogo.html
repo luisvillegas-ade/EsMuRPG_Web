@@ -407,12 +407,12 @@
             const emailAlumno = localStorage.getItem('saamus_email');
 
             if (!emailAlumno) {
-                alert("⚠️ Error: No sabemos quién eres. Por favor vuelve a iniciar sesión.");
+                alert("⚠️ Debes iniciar sesión para inscribirte.");
                 window.location.href = "login.html";
                 return;
             }
 
-            // Cambiar el texto del botón mientras carga (UX)
+            // Feedback visual para el usuario
             let textoOriginal = "CONFIRMAR INSCRIPCIÓN";
             if (btn) {
                 textoOriginal = btn.innerText;
@@ -421,27 +421,27 @@
                 btn.classList.add('opacity-70', 'cursor-not-allowed', 'pointer-events-none');
             }
 
-            // Preparamos el paquete de datos
-            const payload = {
-                accion: "inscribir",
-                email: emailAlumno,
-                id_item: idItemCatalogo
+            // EL CODIGO QUE YA SABEMOS QUE FUNCIONA
+            const opciones = {
+                method: 'POST',
+                redirect: 'follow',
+                body: JSON.stringify({
+                    accion: "inscribir",
+                    email: emailAlumno,
+                    id_item: idItemCatalogo
+                }),
+                headers: { "Content-Type": "text/plain;charset=utf-8" }
             };
 
-            fetch(URL_BACKEND, {
-                method: 'POST',
-                redirect: 'follow', // Crucial para evitar errores de CORS con Google
-                body: JSON.stringify(payload),
-                headers: { "Content-Type": "text/plain;charset=utf-8" }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === "éxito") {
-                        alert("¡Inscripción confirmada! 🎸 Refrescando tu sesión...");
-                        // Lo mandamos al login para que el backend le devuelva sus accesos frescos:
+            fetch(URL_BACKEND, opciones)
+                .then(r => r.json())
+                .then(datos => {
+                    if (datos.status === "éxito") {
+                        alert("¡Inscripción Exitosa! �\nVamos a recargar tu sesión para habilitar el módulo.");
+                        // Enviamos al usuario al login para que el sistema refresque sus permisos
                         window.location.href = "login.html";
                     } else {
-                        alert("Hubo un error: " + data.mensaje);
+                        alert("Error: " + datos.mensaje);
                         if (btn) {
                             btn.innerHTML = `<span>${textoOriginal}</span><i class="ph ph-arrow-right font-bold"></i>`;
                             btn.disabled = false;
@@ -450,9 +450,13 @@
                     }
                 })
                 .catch(error => {
-                    console.warn("Posible error de CORS o URL sin definir. Simulando éxito localmente:", error);
-                    alert("¡Inscripción confirmada! (Simulación) 🎸 Refrescando tu sesión...");
-                    window.location.href = "login.html";
+                    console.error(error);
+                    alert("Error de conexión.");
+                    if (btn) {
+                        btn.innerHTML = `<span>${textoOriginal}</span><i class="ph ph-arrow-right font-bold"></i>`;
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-70', 'cursor-not-allowed', 'pointer-events-none');
+                    }
                 });
         }
     </script>

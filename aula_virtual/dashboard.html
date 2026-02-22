@@ -236,7 +236,7 @@
                                 </div>
                             </div>
 
-                            <a href="temario.html"
+                            <a href="temario.html" id="btn_mod1"
                                 class="mt-8 w-full block text-center bg-saamus-terracotta hover:bg-orange-700 text-white font-semibold py-3 px-4 rounded-lg shadow-lg hover:shadow-orange-900/50 transform hover:-translate-y-0.5 transition-all duration-200">
                                 Ir al Temario
                                 <i class="ph ph-arrow-right ml-2 inline-block"></i>
@@ -314,33 +314,33 @@
 
             // 3. DESBLOQUEAR MÓDULOS (Lógica "A la carta")
             const misAccesos = JSON.parse(localStorage.getItem('saamus_accesos') || "[]");
+            console.log("Mis Accesos:", misAccesos); // Para depurar
 
-            // Tarjeta del Módulo Hero (Tecnicatura en Ritmos Folclóricos / ITEM_CARRERA por ejemplo)
-            const tarjetaMod1 = document.getElementById('tarjeta_mod1');
-            if (tarjetaMod1) {
-                // Aquí deberías poner el ID real que devuelve el Backend (ej: ITEM_CARRERA, MOD_001)
-                // Para simplificar, suponemos que si incluye la carrera o cualquier mod, desbloqueamos la tarjeta.
-                // Como es la vista del dashboard principal, por ahora validaremos un ID genérico o asumimos que si el array tiene algo, está inscripto
+            // LOGICA DE DESBLOQUEO (Módulo 1)
+            const cardMod1 = document.getElementById('tarjeta_mod1');
+            const btnMod1 = document.getElementById('btn_mod1');
+
+            if (cardMod1) {
+                // ¿Tiene el permiso "MOD_001"? (o genérico en nuestro caso de prueba inicial)
                 const tieneAcceso = misAccesos.includes("ITEM_CARRERA") || misAccesos.includes("MOD_001") || misAccesos.length > 0;
 
                 if (tieneAcceso) {
-                    // TIENE ACCESO: Quitamos atributos restrictivos por si estuvieran
-                    tarjetaMod1.classList.remove('opacity-50', 'grayscale', 'cursor-not-allowed');
-                    // No hace falta inyectar HTML de éxito si ya se ve normal, pero como demo lo podemos dejar visual si deseas
-                    // tarjetaMod1.innerHTML += `<div class="absolute top-2 right-2 text-green-500 font-bold bg-green-900/40 px-3 py-1 rounded">✅ Acceso Habilitado</div>`;
+                    // ✅ USUARIO HABILITADO
+                    cardMod1.classList.remove('opacity-50', 'grayscale');
+                    if (btnMod1) {
+                        btnMod1.innerText = "Ingresar al Aula";
+                        btnMod1.onclick = function (e) { e.preventDefault(); window.location.href = "temario.html"; };
+                        btnMod1.classList.remove('cursor-not-allowed', 'bg-gray-600', 'pointer-events-none');
+                        btnMod1.classList.add('bg-saamus-terracotta', 'hover:bg-orange-700');
+                    }
                 } else {
-                    // NO TIENE ACCESO: Ponemos candado y bloqueamos
-                    tarjetaMod1.classList.add('opacity-50', 'grayscale', 'cursor-not-allowed');
-                    tarjetaMod1.innerHTML += `<div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center z-50 backdrop-blur-sm rounded-xl">
-                                                <i class="ph-fill ph-lock-key text-5xl text-red-500 mb-2 drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]"></i>
-                                                <div class="text-white font-bold text-lg mb-4">Requiere Inscripción</div>
-                                                <a href="catalogo.html" class="bg-saamus-terracotta hover:bg-orange-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors">Ir al Catálogo</a>
-                                              </div>`;
-
-                    // Bloqueamos clics en el botón de ir al temario si hicieran clic bajo el overlay
-                    const botonTemario = tarjetaMod1.querySelector('a[href*="temario"]');
-                    if (botonTemario) {
-                        botonTemario.onclick = function (e) { e.preventDefault(); };
+                    // 🔒 USUARIO BLOQUEADO
+                    cardMod1.classList.add('opacity-50', 'grayscale');
+                    if (btnMod1) {
+                        btnMod1.innerText = "🔒 Requiere Inscripción";
+                        btnMod1.onclick = function (e) { e.preventDefault(); window.location.href = "catalogo.html"; };
+                        btnMod1.classList.remove('bg-saamus-terracotta', 'hover:bg-orange-700');
+                        btnMod1.classList.add('cursor-not-allowed', 'bg-gray-600');
                     }
                 }
             }
