@@ -30,10 +30,10 @@
 
         h2 {
             color: #d4af37;
+            /* Dorado */
             margin-bottom: 1.5rem;
         }
 
-        /* Dorado */
         input {
             width: 100%;
             padding: 10px;
@@ -49,13 +49,14 @@
             width: 100%;
             padding: 10px;
             background-color: #ea580c;
-            /* Terracota / Naranja */
+            /* Terracota */
             color: white;
             border: none;
             border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
+            transition: 0.3s;
         }
 
         button:hover {
@@ -74,37 +75,26 @@
 
     <div class="login-container">
         <h2>SAAMUS</h2>
-        <p>Identifícate para ingresar al RPG</p>
+        <p>Identifícate para ingresar a la Academia</p>
 
-        <input type="email" id="email" placeholder="Correo electrónico">
-        <input type="password" id="pass" placeholder="Contraseña">
+        <!-- ⚠️ AQUÍ ESTÁ LA MAGIA: EL FORMULARIO NATIVO -->
+        <!-- target="_top" rompe cualquier bloqueo de seguridad de Google -->
+        <form
+            action="https://script.google.com/macros/s/AKfycbzsPf8M9GzkEPLtI2MtfbVWYaFl_E2UjAjAh-weOarVvQtAooqL6AQhaoLawSTYb4EUgA/exec"
+            method="GET" target="_top" onsubmit="document.getElementById('btn-ingresar').innerText = 'Verificando...';">
 
-        <button id="btn-ingresar" onclick="iniciarSesion()">INGRESAR AL SISTEMA</button>
+            <!-- Los atributos 'name' son los que lee Apps Script (e.parameter.email) -->
+            <input type="email" name="email" id="email" placeholder="Correo electrónico" required>
+            <input type="password" name="pass" id="pass" placeholder="Contraseña" required>
 
-        <p class="footer">Seguridad del Campus v1.1</p>
+            <!-- Destino oculto: le avisa al backend que vamos al Dashboard (aula) -->
+            <input type="hidden" name="dest" value="aula">
+
+            <button type="submit" id="btn-ingresar">INGRESAR AL SISTEMA</button>
+        </form>
+
+        <p class="footer">Seguridad del Campus v1.2</p>
     </div>
-
-    <script>
-        // ⚠️ PEGA TU URL DE GOOGLE APPS SCRIPT AQUÍ
-        const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbzsPf8M9GzkEPLtI2MtfbVWYaFl_E2UjAjAh-weOarVvQtAooqL6AQhaoLawSTYb4EUgA/exec";
-
-        function iniciarSesion() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-            const btn = document.getElementById('btn-ingresar');
-
-            if (!email || !pass) {
-                alert("Por favor, completa usuario y contraseña.");
-                return;
-            }
-
-            btn.innerText = "Verificando...";
-            btn.disabled = true;
-
-            // Redirección al Servidor de Google (Validación)
-            window.location.href = `${URL_APPS_SCRIPT}?email=${email}&pass=${pass}&dest=rpg`;
-        }
-    </script>
 
 </body>
 
